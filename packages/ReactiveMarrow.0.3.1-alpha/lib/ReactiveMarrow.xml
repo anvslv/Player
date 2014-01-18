@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ReactiveMarrow</name>
+    </assembly>
+    <members>
+        <member name="T:ReactiveMarrow.ReactiveProperty`1">
+            <summary>
+            Provides an implementation of <see cref="T:System.IObservable`1"/> that is also a read-write property.
+            </summary>
+            <typeparam name="T">The type of the object that should be exposed.</typeparam>
+        </member>
+        <member name="M:ReactiveMarrow.ReactiveProperty`1.#ctor(`0)">
+            <summary>
+            Initializes the <see cref="T:ReactiveMarrow.ReactiveProperty`1"/> with an optional default value for <see cref="!:T"/>.
+            </summary>
+            <param name="value">The value for <see cref="!:T"/></param>
+        </member>
+        <member name="P:ReactiveMarrow.ReactiveProperty`1.Value">
+            <summary>
+            Gets or sets the value of the <see cref="T:ReactiveMarrow.ReactiveProperty`1"/>'s backing field.
+            </summary>
+        </member>
+    </members>
+</doc>

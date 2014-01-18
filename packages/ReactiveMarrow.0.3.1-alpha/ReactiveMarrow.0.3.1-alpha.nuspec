@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+  <metadata>
+    <id>ReactiveMarrow</id>
+    <version>0.3.1-alpha</version>
+    <authors>Dennis Daume</authors>
+    <owners>Dennis Daume</owners>
+    <licenseUrl>http://www.opensource.org/licenses/mit-license</licenseUrl>
+    <projectUrl>https://github.com/flagbug/ReactiveMarrow</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A library for reactive backends.</description>
+    <tags>reactive marrow</tags>
+    <dependencies>
+      <dependency id="Rx-Main" version="2.1.30214.0" />
+    </dependencies>
+  </metadata>
+</package>
