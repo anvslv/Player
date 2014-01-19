@@ -60,6 +60,7 @@
     <Compile Include="LocalAudioPlayerTest.cs" />
     <Compile Include="Mocks\JumpAudioPlayer.cs" />
     <Compile Include="PlaylistTest.cs" />
+    <Compile Include="SongFinderTest.cs" />
     <Compile Include="SongTest.cs" />
     <Compile Include="TagSanitizerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

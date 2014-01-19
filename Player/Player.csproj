@@ -72,6 +72,9 @@
     <Compile Include="IO\DirectoryScanErrorType.cs" />
     <Compile Include="IO\DirectoryScanner.cs" />
     <Compile Include="IO\FileEventArgs.cs" />
+    <Compile Include="IO\FileScanErrorEventArgs.cs" />
+    <Compile Include="IO\FileScanner.cs" />
+    <Compile Include="IO\IBaseScanner.cs" />
     <Compile Include="MicroMvvm\ObservableObject.cs" />
     <Compile Include="MicroMvvm\PropertySupport.cs" />
     <Compile Include="MicroMvvm\RelayCommand.cs" />

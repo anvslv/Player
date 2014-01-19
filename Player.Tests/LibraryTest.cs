@@ -184,7 +184,6 @@ namespace Player.Tests
             }
         }
          
-
         [Fact]
         public void PlayPreviousSong_PlaylistIsEmpty_ThrowsInvalidOperationException()
         {

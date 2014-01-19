@@ -8,7 +8,7 @@ namespace Player.Core
     /// <summary>
     /// Provides a directoy scanner to scan a directory recursively for files and directories.
     /// </summary>
-    public class DirectoryScanner
+    public class DirectoryScanner : IBaseScanner
     {
         private readonly List<FileInfo> filesFound;
         private volatile bool isStopped;
@@ -45,7 +45,7 @@ namespace Player.Core
         /// Occurs when a file has been found.
         /// </summary>
         public event EventHandler<FileEventArgs> FileFound;
-
+     
         /// <summary>
         /// Occurs when the search has finished.
         /// </summary>

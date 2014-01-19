@@ -23,4 +23,14 @@ namespace Player.Core
         /// </summary>
         DirectoryNotFoundError
     }
+
+    [Serializable]
+    public enum FileScanErrorType
+    { 
+        SecurityError,
+         
+        AccessError,
+         
+        FileNotFoundError
+    }
 }

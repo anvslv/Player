@@ -151,14 +151,14 @@ namespace Player.Core
         /// <summary>
         /// Adds the song that are contained in the specified directory recursively in an asynchronous manner to the library.
         /// </summary>
-        /// <param name="path">The path of the directory to search.</param>
+        /// <param name="paths">The paths of the directory to search.</param>
         /// <returns>The <see cref="Task"/> that did the work.</returns>
-        public Task AddLocalSongsAsync(string path)
+        public Task AddLocalSongsAsync(params string[] paths)
         {
-            if (path == null)
-                throw new ArgumentNullException("path");
+            if (paths == null)
+                throw new ArgumentNullException("paths");
 
-            return Task.Factory.StartNew(() => this.AddLocalSongs(path));
+            return Task.Factory.StartNew(() => this.AddLocalSongs(paths));
         }
          
         /// <summary>
@@ -296,40 +296,40 @@ namespace Player.Core
         /// <summary>
         /// Adds the song that are contained in the specified directory recursively to the library.
         /// </summary>
-        /// <param name="path">The path of the directory to search.</param>
-        private void AddLocalSongs(string path)
+        /// <param name="paths">The paths of the directory to search.</param>
+        private void AddLocalSongs(params string[] paths)
         {
-            if (path == null)
-                throw new ArgumentNullException("path");
+            if (paths == null)
+                throw new ArgumentNullException("paths");
 
-            if (!Directory.Exists(path))
-                throw new ArgumentException("The directory doesn't exist.", "path");
+            foreach (var path in paths)
+            { 
+                var finder = new SongFinder(path);
 
-            var finder = new SongFinder(path);
-
-            finder.SongFound += (sender, e) =>
-            {
-                if (this.abortSongAdding)
+                finder.SongFound += (sender, e) =>
                 {
-                    finder.Abort();
-                    return;
-                }
-                 
-                lock (this.songLock)
-                {
-                    lock (this.disposeLock)
+                    if (this.abortSongAdding)
                     {
-                        this.CurrentPlaylist.AddSong(e.Song);
+                        finder.Abort();
+                        return;
                     }
-                }
-                  
-                if (this.SongAdded != null)
-                    this.SongAdded(this,
-                        new LibraryFillEventArgs(e.Song, finder.TagsProcessed, finder.CurrentTotalSongs));
-                
-            };
 
-            finder.Start();
+                    lock (this.songLock)
+                    {
+                        lock (this.disposeLock)
+                        {
+                            this.CurrentPlaylist.AddSong(e.Song);
+                        }
+                    }
+
+                    if (this.SongAdded != null)
+                        this.SongAdded(this,
+                            new LibraryFillEventArgs(e.Song, finder.TagsProcessed, finder.CurrentTotalSongs));
+
+                };
+
+                finder.Start(); 
+            }
         }
          
         private void HandleSongCorruption()

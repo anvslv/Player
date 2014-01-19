@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using TagLib;
+using System.Threading.Tasks; 
 
 namespace Player.Core
 {
@@ -12,7 +11,7 @@ namespace Player.Core
         private static readonly string[] AllowedExtensions = new[] { ".mp3" };
         private readonly List<string> corruptFiles;
         private readonly Queue<string> pathQueue;
-        private readonly DirectoryScanner scanner;
+        private readonly IBaseScanner scanner;
         private readonly object songListLock;
         private readonly object tagLock;
         private volatile bool abort; 
@@ -33,7 +32,14 @@ namespace Player.Core
 
             this.pathQueue = new Queue<string>();
             this.corruptFiles = new List<string>();
-            this.scanner = new DirectoryScanner(path);
+            if (Directory.Exists(path))
+            { 
+                this.scanner = new DirectoryScanner(path);
+            }
+            else if (File.Exists(path))
+            {
+                this.scanner = new FileScanner(path);
+            }
             this.scanner.FileFound += ScannerFileFound; 
         }
 
@@ -126,7 +132,7 @@ namespace Player.Core
             this.OnFinished(EventArgs.Empty);
         }
 
-        private static Song CreateSong(Tag tag, TimeSpan duration, string filePath)
+        private static Song CreateSong(TagLib.Tag tag, TimeSpan duration, string filePath)
         {
             return new LocalSong(filePath, duration)
             {
@@ -174,7 +180,7 @@ namespace Player.Core
                 }
             }
 
-            catch (CorruptFileException)
+            catch (TagLib.CorruptFileException)
             {
                 this.corruptFiles.Add(filePath);
             }
@@ -251,7 +257,7 @@ namespace Player.Core
     }
         
     /// <summary>
-    /// Provides data for the <see cref="LocalSongFinder.SongFound"/> event.
+    /// Provides data for the <see cref="SongFinder.SongFound"/> event.
     /// </summary>
     public sealed class SongEventArgs : EventArgs
     {
