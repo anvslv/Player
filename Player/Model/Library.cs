@@ -18,6 +18,7 @@ namespace Player.Core
         private readonly object songLock;
         private bool abortSongAdding;
         private AudioPlayer currentPlayer;
+        private float volume;
 
         public Library(IPlayerStateManager playerStateManager)
         {
@@ -83,10 +84,14 @@ namespace Player.Core
         /// </summary>
         public TimeSpan CurrentTime
         {
-            get { return this.currentPlayer == null ? TimeSpan.Zero : this.currentPlayer.CurrentTime; }
+            get { return this.CurrentPlaylist.CurrentTime; }
             set
             { 
-                this.currentPlayer.CurrentTime = value;
+                this.CurrentPlaylist.CurrentTime = value;
+                if (this.currentPlayer != null)
+                {
+                    this.currentPlayer.CurrentTime = value;
+                }
             }
         }
 

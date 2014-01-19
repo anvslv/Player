@@ -50,6 +50,10 @@ namespace Player.Settings
                     new XElement("Playlist",
                         new XElement("Volume",
                             new XAttribute("Value", playlist.Volume)),
+                        new XElement("CurrentSongIndex",
+                            new XAttribute("Value", playlist.CurrentSongIndex ?? 0)),
+                        new XElement("CurrentTime",
+                            new XAttribute("Value", playlist.CurrentTime.Ticks)),
                         new XElement("Entries", playlist.Select(entry =>
                             new XElement("Entry",
                                 new XAttribute("FilePath", entry.Song.FilePath),
@@ -58,9 +62,7 @@ namespace Player.Settings
                                 new XAttribute("Title", entry.Song.Title),
                                 new XAttribute("Year", entry.Song.Year),
                                 new XAttribute("TrackNumber", entry.Song.TrackNumber),
-                                entry.Song.IsCurrent ? new XAttribute("IsCurrent", entry.Song.IsCurrent) : null,
-                                new XAttribute("Duration", entry.Song.Duration.Ticks),
-                                entry.Song.IsCurrent ? new XAttribute("CurrentPosition", entry.Song.CurrentPosition.Ticks) : null
+                                new XAttribute("Duration", entry.Song.Duration.Ticks)
             ))))));
 
             document.Save(stream);
@@ -86,14 +88,7 @@ namespace Player.Settings
                         Title = song.Attribute("Title").Value,
                         Year = Int32.Parse(song.Attribute("Year").Value),
                         TrackNumber = Int32.Parse(song.Attribute("TrackNumber").Value)
-                    };
-                    if (song.Attribute("IsCurrent") !=null)
-                        localsong.IsCurrent = 
-                            Convert.ToBoolean(song.Attribute("IsCurrent").Value);
-                    if (song.Attribute("CurrentPosition") !=null)
-                        localsong.CurrentPosition =
-                            TimeSpan.FromTicks(Int64.Parse(song.Attribute("CurrentPosition").Value));
-
+                    }; 
                     return localsong;
                 });
 
@@ -103,9 +98,24 @@ namespace Player.Settings
                     float.Parse(v.Attribute("Value").Value))
                 .FirstOrDefault();
 
+            int currentSongIndex = playlist
+               .Descendants("CurrentSongIndex")
+               .Select(e =>
+                   int.Parse(e.Attribute("Value").Value))
+               .FirstOrDefault();
+             
+            TimeSpan currentTime = playlist
+                .Descendants("CurrentTime")
+                .Select(e => 
+                    TimeSpan.FromTicks(Int64.Parse(e.Attribute("CurrentPosition").Value)))
+                .FirstOrDefault();
+
             var p = new Playlist();
             p.AddSongs(songs);
             p.Volume = volume;
+            p.CurrentSongIndex = currentSongIndex;
+            p.CurrentTime = currentTime;
+
             return p; 
         } 
     }

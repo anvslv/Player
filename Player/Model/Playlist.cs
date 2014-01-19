@@ -57,7 +57,9 @@ namespace Player.Core
             }
         }
 
-        public float Volume { get; set; } 
+        public float Volume { get; set; }
+
+        public TimeSpan CurrentTime { get; set; }
 
         public PlaylistEntry this[int index]
         {

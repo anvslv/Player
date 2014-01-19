@@ -89,11 +89,7 @@ namespace Player.Core
         public int TrackNumber { get; set; }
          
         public int Year { get; set; }
-
-        public TimeSpan CurrentPosition { get; set; }
-        
-        public bool IsCurrent = false;
-
+          
         /// <summary>
         /// Determines whether the specified <see cref="System.Object"/> is equal to this instance.
         /// </summary>
