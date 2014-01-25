@@ -29,7 +29,7 @@ namespace Player.Services
                 Window = "Songs",
                 Width = 400,
                 Height = 400,
-                Top = 100,
+                Top = 24,
                 Left = 0,
                 IsVisible = true
             };

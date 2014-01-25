@@ -39,7 +39,7 @@ namespace Player.Views
 
         public override void ShowHideWindow()
         {
-            if(IsHidden || IsVisible)
+            if (IsHidden || IsVisible)
             {
                 Hide();
             }

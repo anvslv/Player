@@ -27,8 +27,7 @@ namespace Player.ViewModels
             this.library.SongFinished += (sender, args) => this.HandleSongFinished();
             this.library.SongCorrupted += (sender, args) => this.HandleSongCorrupted();
             this.library.FirstSongSelected += (sender, e) => this.UpdateStripe();
-            //this.library.PlaylistChanged += (sender, e) => this.UpdateStripe();
-           
+          
             if (this.library.CurrentPlaylist == null)
             {
                 this.library.CreateNewPlaylist();
@@ -41,7 +40,30 @@ namespace Player.ViewModels
             this.showVolumeTimer.AutoReset = false;
             this.showVolumeTimer.Elapsed += (sender, e) => this.UpdateCurrentTime(); 
         }
-             
+
+        private double thisWidth;
+
+        private Double StripeMinWidth = 300;
+        private Double ShortTimeStripeMaxWidth = 350;
+        private Double StripeMaxWidth = 700;
+
+        public double ThisWidth
+        {
+            get { return thisWidth; }
+            set
+            {
+                if (Math.Abs(thisWidth - value) > 1)
+                { 
+                    thisWidth = value > StripeMaxWidth ? StripeMaxWidth : value;
+                    thisWidth = value < StripeMinWidth ? StripeMinWidth : value;
+
+                    RaisePropertyChanged(() => ThisWidth);
+                    RaisePropertyChanged(() => RightBlock);
+                }
+            }
+        }
+
+
         public int CurrentSeconds
         {
             get { return (int)this.CurrentTime.TotalSeconds; }
@@ -95,14 +117,25 @@ namespace Player.ViewModels
             }
         }
 
+        public string ShortTime
+        {
+            get
+            {
+                if (library.LoadedSong != null)
+                    return string.Format("{0}", this.CurrentTime.ToMinutesAndSeconds());
+                return string.Empty;
+            }
+        }
+
         public string RightBlock
         {
             get
             {
                 if (showVolumeTimer.Enabled)
                     return string.Format("{0}%", (int)(this.Volume * 100));
-                else 
+                if (thisWidth > ShortTimeStripeMaxWidth) 
                     return Time;
+                return ShortTime;
             }
         }
 

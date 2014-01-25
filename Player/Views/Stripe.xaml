@@ -6,9 +6,7 @@
         Height="{StaticResource StripeHeight}" 
         MinHeight="{StaticResource StripeHeight}"
         MaxHeight="{StaticResource StripeHeight}"
-        Width="{StaticResource StripeWidth}" 
-        MaxWidth="{StaticResource StripeMaxWidth}" 
-        MinWidth="{StaticResource StripeMinWidth}" 
+        Width="{Binding Path=ThisWidth, Mode=TwoWay}"  
         WindowStyle="None" 
         ResizeMode="{Binding ThisResizeMode}"
         ShowInTaskbar="False" 
@@ -29,8 +27,8 @@
             IsMoveToPointEnabled="True"
             Maximum="{Binding Path=TotalSeconds}"
             Value="{Binding Path=CurrentSeconds}"  />
- 
-        <DockPanel DockPanel.Dock="Top" x:Name="Draggable" Margin="5,3" Background="{StaticResource PlayerBackgorund}"> 
+        <Rectangle Width="10" HorizontalAlignment="Right" Margin="0,3,0,0" x:Name="Grip" Fill="{StaticResource PlayerBackgorund}" Cursor="Hand"></Rectangle>
+        <DockPanel DockPanel.Dock="Top" x:Name="Draggable" Margin="5,3,10,3" Background="{StaticResource PlayerBackgorund}"> 
             <TextBlock Foreground="{Binding IsPlaying, 
                     Converter={StaticResource IsPlayingToForegroundConverter}}"
                 Text="{Binding LeftBlock}"
@@ -41,6 +39,6 @@
                 Text="{Binding RightBlock}"
                 x:Name="RightBlock"
                     HorizontalAlignment="Right"/>
-            </DockPanel>
+            </DockPanel> 
     </Grid> 
 </services:BaseWindow>

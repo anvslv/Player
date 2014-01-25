@@ -107,8 +107,6 @@
 
     <system:Double x:Key="StripeHeight">24</system:Double>
     <system:Double x:Key="StripeWidth">500</system:Double> 
-    <system:Double x:Key="StripeMinWidth">300</system:Double>
-    <system:Double x:Key="StripeMaxWidth">700</system:Double>
 
     <system:Double x:Key="SongsHeight">700</system:Double>
     <system:Double x:Key="SongsWidth">500</system:Double>

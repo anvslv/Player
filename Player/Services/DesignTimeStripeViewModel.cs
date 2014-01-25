@@ -12,7 +12,7 @@ namespace Player.Services
 
         public ResizeMode ThisResizeMode
         {
-            get { return ResizeMode.NoResize; }
+            get { return ResizeMode.CanResize; }
         } 
     }
 }

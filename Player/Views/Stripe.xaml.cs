@@ -1,10 +1,15 @@
-﻿using System.ComponentModel;
-using System.Windows; 
+﻿using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Windows;
+using System.Windows.Automation.Peers;
+using System.Windows.Input;
+using System.Windows.Interop;
 using Player.Services;
 using Player.ViewModels;
 
 namespace Player.Views
-{
+{ 
     public partial class Stripe : BaseWindow
     {
         private StripeViewModel viewModel;
@@ -17,6 +22,10 @@ namespace Player.Views
             Drop += OnDrop;
             Closing += OnClosing;
             
+            this.Grip.PreviewMouseLeftButtonDown += GripOnMouseDown;
+            this.Grip.PreviewMouseLeftButtonUp += GripOnMouseUp;
+            this.Grip.PreviewMouseMove += GripOnMouseMove;
+
             if (DesignerProperties.GetIsInDesignMode(this))
                 DataContext = new DesignTimeStripeViewModel();
             else
@@ -27,7 +36,49 @@ namespace Player.Views
 
             WireCommands();
         }
-          
+
+        bool isResizing = false;
+        Point startPt;
+
+        public double ThisWidth
+        {
+            get { return viewModel.ThisWidth; }
+            set
+            {
+                viewModel.ThisWidth = value;
+                Debug.WriteLine(Width);
+                Debug.WriteLine(ThisWidth);
+            }
+        }
+
+        private void GripOnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                Mouse.Capture(this.Grip);
+                isResizing = true; 
+                startPt = e.GetPosition(this.Grip); 
+            }
+        }
+        private void GripOnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (isResizing)
+            {
+                isResizing = false; 
+                this.Grip.ReleaseMouseCapture();
+            }
+        }
+
+        private void GripOnMouseMove(object sender, MouseEventArgs e)
+        {
+            if (isResizing)
+            {
+                Point newPt = e.GetPosition(this.Grip);
+                var newWidth = this.Width + newPt.X - startPt.X;
+                ThisWidth = newWidth; 
+            }
+        }
+       
         private void WireCommands()
         {
             this.Draggable.DoubleClick(viewModel.PauseContinueCommand);
@@ -58,7 +109,7 @@ namespace Player.Views
 
         public override ResizeMode GetResizeMode()
         {
-            return ResizeMode.NoResize;
+            return ResizeMode.CanResize;
         }
 
         private void OnDrop(object sender, DragEventArgs e)

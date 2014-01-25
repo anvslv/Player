@@ -20,7 +20,7 @@ namespace Player.Settings
     {
         private string path;
         private Songs songs;
-        private BaseWindow stripe;
+        private Stripe stripe;
 
         private static IWindowStateManager _instance;
 
@@ -109,7 +109,7 @@ namespace Player.Settings
             {
                 stripe = new Stripe();
                 stripe.Height = w.Height;
-                stripe.Width = w.Width;
+                stripe.ThisWidth = w.Width;
                 stripe.Left = w.Left;
                 stripe.Top = w.Top;
                 stripe.Topmost = true;
