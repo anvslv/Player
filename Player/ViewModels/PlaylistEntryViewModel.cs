@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using MicroMvvm;
 using Player.Core;
 using Player.Model;
@@ -16,7 +17,7 @@ namespace Player.ViewModels
         public PlaylistEntryViewModel(PlaylistEntry e, int count)
         {
             this.entry = e;
-            this.pad = count / 10 + 1;
+            this.pad = (count + "").Count();
             this.entry.Song.Corrupted += OnCorrupted;
         }
 

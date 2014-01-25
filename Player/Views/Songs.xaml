@@ -129,6 +129,9 @@
                         <DataTrigger Binding="{Binding Path=IsCorrupted}" Value="True">
                             <Setter Property="Foreground" Value="DarkRed" />
                         </DataTrigger>
+                        <DataTrigger Binding="{Binding Path=IsCorrupted}" Value="False">
+                            <Setter Property="Foreground" Value="Black" />
+                        </DataTrigger>
                     </Style.Triggers>
                 </Style> 
             </ListView.ItemContainerStyle> 

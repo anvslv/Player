@@ -1,65 +1,70 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security;
+using System.Security.Policy;
 using Player.Core;
+using SharpCompress.Archive;
+using SharpCompress.Common;
 
 namespace Player.IO
 {
-    public class FileScanner : IBaseScanner
-    {
-        private FileInfo foundFile;
+    public class FileScanner : DirectoryScanner
+    { 
         private volatile bool isStopped;
+        private string[] supportedExtensions =
+        {
+            ".rar",
+            ".zip", 
+            // ".7z" weird behavior
+        };
 
-        public FileScanner(string path)
+        public FileScanner(string path) : base ()
         {
             if (path == null)
                 throw new ArgumentNullException("path");
-
-            this.DirectoryPath = path; 
+             
+            this.FilePath = path; 
         }
-
-        public event EventHandler<FileEventArgs> FileFound;
+         
         public event EventHandler<FileScanErrorEventArgs> FileScanError;
-        public event EventHandler FileProceeded;
-        public event EventHandler Finished;
+        public event EventHandler FileProceeded; 
          
-        public string DirectoryPath { get; private set; }
-         
-        public FileInfo FoundFile
-        {
-            get { return this.foundFile; }
-        }
-
-        public bool IsStopped
-        {
-            get { return this.isStopped; }
-            private set { this.isStopped = value; }
-        }
-
-        public void Start()
-        {
-            this.ScanFile(this.DirectoryPath);
-
+        public string FilePath { get; private set; }
+           
+        public override void Start()
+        { 
+            this.ChooseHowToScan(this.FilePath); 
             this.OnFinished(EventArgs.Empty);
         }
 
-        public void Stop()
-        {
-            this.IsStopped = true;
-        }
+        private void ChooseHowToScan(string file)
+        { 
+            var i = new FileInfo(file);
+            if (supportedExtensions.Contains(i.Extension))
+            {
+                this.DirectoryPath = string.Format(@"C:\temp\{0}", Guid.NewGuid());
+                var archive = ArchiveFactory.Open(file);
+                foreach (var entry in archive.Entries)
+                {
+                    if (!entry.IsDirectory)
+                    {
+                        entry.WriteToDirectory(DirectoryPath,
+                            ExtractOptions.ExtractFullPath |
+                            ExtractOptions.Overwrite);
 
-        protected virtual void OnFileFound(FileEventArgs e)
-        {
-            if (this.FileFound != null)
-                this.FileFound(this, e);
+                        var thispath = Path.Combine(DirectoryPath, entry.FilePath);
+                        this.ScanFile(thispath);
+                    }
+                }
+            }
+            else
+            {
+                this.ScanFile(this.FilePath); 
+            }
         }
-
-        protected virtual void OnFinished(EventArgs e)
-        {
-            if (this.Finished != null)
-                this.Finished(this, e);
-        }
-
+         
         protected virtual void OnFileScanError(FileScanErrorEventArgs e)
         {
             if (this.FileScanError != null)
@@ -87,7 +92,7 @@ namespace Player.IO
                 {  
                     if (this.IsStopped) { return; }
 
-                    this.foundFile = fileInfo;
+                    this.FilesFound.Add(fileInfo); 
                     this.OnFileFound(new FileEventArgs(fileInfo)); 
                 }
 

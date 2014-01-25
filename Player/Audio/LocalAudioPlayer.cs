@@ -176,7 +176,13 @@ namespace Player.Audio
             {
                 if (wavePlayer != null)
                 {
-                    this.wavePlayer.Dispose();
+                    try
+                    {
+                        this.wavePlayer.Dispose();
+                    }
+                    catch (NullReferenceException)
+                    { }
+               
                     this.wavePlayer = null;
                 }
 

@@ -18,12 +18,16 @@ namespace Player.IO
         /// Initializes a new instance of the <see cref="DirectoryScanner"/> class.
         /// </summary>
         /// <param name="path">The path of the directory to scan.</param>
-        public DirectoryScanner(string path)
+        public DirectoryScanner(string path) : this ()
         {
             if (path == null)
                 throw new ArgumentNullException("path");
 
             this.DirectoryPath = path;
+        }
+
+        protected DirectoryScanner()
+        {
             this.filesFound = new List<FileInfo>();
         }
 
@@ -55,12 +59,12 @@ namespace Player.IO
         /// <summary>
         /// Gets the directory path.
         /// </summary>
-        public string DirectoryPath { get; private set; }
+        public string DirectoryPath { get; protected set; }
 
         /// <summary>
         /// Gets the found files.
         /// </summary>
-        public IEnumerable<FileInfo> FilesFound
+        public List<FileInfo> FilesFound
         {
             get { return this.filesFound; }
         }
@@ -80,7 +84,7 @@ namespace Player.IO
         /// <summary>
         /// Starts the directory scanner.
         /// </summary>
-        public void Start()
+        public virtual void Start()
         {
             this.ScanDirectories(this.DirectoryPath);
 
@@ -149,7 +153,7 @@ namespace Player.IO
         /// Scans a directory recursively.
         /// </summary>
         /// <param name="rootPath">The root path.</param>
-        private void ScanDirectories(string rootPath)
+        protected void ScanDirectories(string rootPath)
         {
             if (rootPath == null)
                 throw new ArgumentNullException("rootPath");
