@@ -1,16 +1,18 @@
-﻿using System;
-using System.Drawing;
-using System.Runtime.InteropServices;
+﻿// http://programminghacks.net/2009/10/19/download-snapping-sticky-magnetic-windows-for-wpf/
+
+using System;
+using System.Diagnostics;
+using System.Drawing; 
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
 using Point=System.Drawing.Point;
 using Size=System.Drawing.Size;
-using System.Windows.Media;
-using System.Diagnostics;
+using System.Windows.Media; 
 
 namespace StickyWindowLibrary
 {
+    [DebuggerStepThrough]
     public class WpfFormAdapter : IFormAdapter
     {
         private readonly Window _window;

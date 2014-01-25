@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks; 
+using System.Threading.Tasks;
+using Player.Core;
+using Player.IO;
 
-namespace Player.Core
+namespace Player.Model
 {
     internal sealed class SongFinder 
     {
@@ -17,7 +19,9 @@ namespace Player.Core
         private volatile bool abort; 
         private volatile bool isSearching;
         private volatile bool isTagging;
-         
+
+        private readonly List<Song> songsFound;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SongFinder"/> class.
         /// </summary>
@@ -32,6 +36,9 @@ namespace Player.Core
 
             this.pathQueue = new Queue<string>();
             this.corruptFiles = new List<string>();
+
+            this.songsFound = new List<Song>();
+
             if (Directory.Exists(path))
             { 
                 this.scanner = new DirectoryScanner(path);
@@ -93,6 +100,11 @@ namespace Player.Core
             }
         }
 
+        private ICollection<Song> InternSongsFound
+        {
+            get { return this.songsFound; }
+        }
+         
         /// <summary>
         /// Gets the number of tags that are processed yet.
         /// </summary>
@@ -139,7 +151,7 @@ namespace Player.Core
                 Album = PrepareTag(tag.Album, String.Empty),
                 Artist = PrepareTag(tag.FirstPerformer, "Unknown Artist"), //HACK: In the future retrieve the string for an unkown artist from the view if we want to localize it 
                 Title = PrepareTag(tag.Title, Path.GetFileNameWithoutExtension(filePath)),
-                TrackNumber = (int)tag.Track
+                TrackNumber = (int)tag.Track, 
             };
         }
 
@@ -149,7 +161,7 @@ namespace Player.Core
         }
 
         private void AddSong(TagLib.File file)
-        {
+        { 
             var song = CreateSong(file.Tag, file.Properties.Duration, file.Name);
 
             lock (this.songListLock)
@@ -167,8 +179,7 @@ namespace Player.Core
                 TagLib.File file = null;
                  
                 file = new TagLib.Mpeg.AudioFile(filePath);
-                       
-
+                        
                 if (file != null)
                 {
                     if (file.Tag != null)
@@ -235,14 +246,7 @@ namespace Player.Core
                 }
             }
         }
-         
-        private ICollection<Song> InternSongsFound
-        {
-            get { return this.songsFound; }
-        }
-
-        private readonly List<Song> songsFound;
-
+          
         private void OnFinished(EventArgs e)
         {
             if (this.Finished != null)

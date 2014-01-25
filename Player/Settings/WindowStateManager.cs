@@ -1,17 +1,42 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Linq; 
 using System.Xml.Linq;
-using Player.View.Services;
+using Player.Services;
+using Player.Settings;
+using Player.Views;
 
 namespace Player.Settings
 {
-    public class WindowStateManager : IWindowStateManager
+    interface IWindowStateManager
+    {
+        void Dispose(); 
+        void CreateWindows();
+        void ShowHidePlaylist();
+    }
+
+    class WindowStateManager : IWindowStateManager
     {
         private string path;
+        private BaseWindow songs;
+        private BaseWindow stripe;
 
-        public WindowStateManager(string filePath)
+        private static IWindowStateManager _instance;
+
+        public static IWindowStateManager Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new WindowStateManager(SettingsPath.WindowSettingsFilePath);
+                }
+                return _instance;
+            }
+        }
+         
+        private WindowStateManager(string filePath)
         {
             if (string.IsNullOrEmpty(filePath))
                 throw new ArgumentNullException("filePath");
@@ -19,8 +44,9 @@ namespace Player.Settings
             path = filePath;
         }
 
-        public void Save(IEnumerable<PlayerWindow> windows)
+        public void Dispose()
         {
+            var windows = State.Instance.WindowsStates;
             using (FileStream s = File.Create(path))
             {
                 var document = new XDocument(
@@ -39,7 +65,7 @@ namespace Player.Settings
             }
         }
 
-        public IEnumerable<PlayerWindow> GetWindows()
+        private IEnumerable<PlayerWindow> GetWindows()
         {
             if (!File.Exists(path))
                 return new [] {
@@ -69,5 +95,48 @@ namespace Player.Settings
             }
         }
 
-    }
+        public void CreateWindows()
+        {  
+            var windowStates = GetWindows();
+
+            foreach (var windowState in windowStates) 
+                CreateWindow(windowState); 
+        }
+
+        private void CreateWindow(PlayerWindow w)
+        {
+            if (w.Window == "Stripe")
+            {
+                stripe = new Stripe();
+                stripe.Height = w.Height;
+                stripe.Width = w.Width;
+                stripe.Left = w.Left;
+                stripe.Top = w.Top;
+                stripe.Topmost = true;
+
+                if (w.IsVisible)
+                    stripe.Show();
+            }
+            else
+            {
+                songs = new Songs();
+                songs.Height = w.Height;
+                songs.Width = w.Width;
+                songs.Left = w.Left;
+                songs.Top = w.Top;
+                songs.Topmost = true;
+
+                if (w.IsVisible)
+                    songs.Show();
+            } 
+        }
+
+        public void ShowHidePlaylist()
+        {
+            if (songs.IsVisible)
+                songs.Hide(); 
+            else 
+                songs.Show();
+        }
+    } 
 }

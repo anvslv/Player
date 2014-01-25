@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+                    xmlns:system="clr-namespace:System;assembly=mscorlib" 
+                    xmlns:converters="clr-namespace:Player.Services.Converters">
     <Style x:Key="SliderRepeatButtonStyle" TargetType="{x:Type RepeatButton}">
         <Setter Property="OverridesDefaultStyle" Value="true"/>
         <Setter Property="IsTabStop" Value="false"/>
@@ -18,10 +19,8 @@
         <Setter Property="OverridesDefaultStyle" Value="True"/>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Thumb}">
-                    <Border Margin="5">
-                        <Rectangle Fill="#FF000000" Stroke="#FF000000" Height="4" Width="8"/>
-                    </Border>
+                <ControlTemplate TargetType="{x:Type Thumb}"> 
+                    <Rectangle Fill="#FF000000" Stroke="#FF000000" Height="3" Width="8"/> 
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -37,25 +36,38 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Slider}">
-                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" 
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}" 
                             BorderThickness="{TemplateBinding BorderThickness}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}"/>
+                                <RowDefinition Height="Auto" 
+                                               MinHeight="{TemplateBinding MinHeight}"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <TickBar x:Name="TopTick" Visibility="Collapsed" Fill="{TemplateBinding Foreground}" 
-                                     Placement="Top" Height="4" Grid.Row="0"/>
-                            <TickBar x:Name="BottomTick" Visibility="Collapsed" Fill="{TemplateBinding Foreground}" 
-                                     Placement="Bottom" Height="4" Grid.Row="0"/>
+                            <TickBar x:Name="TopTick"
+                                     Visibility="Collapsed"
+                                     Fill="{TemplateBinding Foreground}" 
+                                     Placement="Top" 
+                                     Height="3"
+                                     Grid.Row="0"/>
+                            <TickBar x:Name="BottomTick"
+                                     Visibility="Collapsed" 
+                                     Fill="{TemplateBinding Foreground}" 
+                                     Placement="Bottom" 
+                                     Height="3"
+                                     Grid.Row="0"/>
                             <Border x:Name="TrackBackground" 
-                                     Background="{StaticResource HorizontalSliderTrackNormalBackground}"
-                                     BorderBrush="{StaticResource HorizontalSliderTrackNormalBorder}"                                        
-                                     BorderThickness="1" CornerRadius="0"
-                                     Margin="5,0" VerticalAlignment="Center" Height="4.0" Grid.Row="1" >
-                                <Canvas Margin="-6,-1">
-                                    <Rectangle Visibility="Hidden" x:Name="PART_SelectionRange" Height="4.0"
+                                    Background="{StaticResource HorizontalSliderTrackNormalBackground}"
+                                    BorderBrush="{StaticResource HorizontalSliderTrackNormalBorder}"                                        
+                                    BorderThickness="1" 
+                                    CornerRadius="0"
+                                    Margin="0" 
+                                    VerticalAlignment="Center" 
+                                    Height="3" Grid.Row="1" >
+                                <Canvas Margin="-6,-1"  >
+                                    <Rectangle Visibility="Hidden" x:Name="PART_SelectionRange" Height="3.0"
                                          Fill="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"
                                          Stroke="{DynamicResource {x:Static SystemColors.ControlDarkDarkBrushKey}}"
                                          StrokeThickness="1.0"/>
@@ -71,7 +83,9 @@
                                                       Command="{x:Static Slider.IncreaseLarge}"/>
                                 </Track.IncreaseRepeatButton>
                                 <Track.Thumb>
-                                    <Thumb x:Name="Thumb" Style="{StaticResource CustomThumbForSlider}" Background="Black"/>
+                                    <Thumb x:Name="Thumb"
+                                           Style="{StaticResource CustomThumbForSlider}"
+                                           Background="Black"/>
                                 </Track.Thumb>
                             </Track>
                         </Grid>
@@ -80,8 +94,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-
-    
+ 
     <Color x:Key="HoverBackgroundColor">LightGray</Color>
     <Color x:Key="MiddleColor">Gray</Color>
     <Color x:Key="SelectedForegroundColor">White</Color>
@@ -92,7 +105,7 @@
     <SolidColorBrush x:Key="SelectedForeground" Color="{StaticResource SelectedForegroundColor}" />
     <SolidColorBrush x:Key="HoverBackground" Color="{StaticResource HoverBackgroundColor}" />
 
-    <system:Double x:Key="StripeHeight">80</system:Double>
+    <system:Double x:Key="StripeHeight">24</system:Double>
     <system:Double x:Key="StripeWidth">500</system:Double> 
     <system:Double x:Key="StripeMinWidth">300</system:Double>
     <system:Double x:Key="StripeMaxWidth">700</system:Double>
@@ -103,5 +116,9 @@
     <system:Double x:Key="SongsMaxWidth">700</system:Double> 
     <system:Double x:Key="SongsMinHeight">100</system:Double>
     <system:Double x:Key="SongsMaxHeight">1000</system:Double>
+
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    <converters:IsPlayingToForegroundConverter x:Key="IsPlayingToForegroundConverter" /> 
+    <converters:PlaylistEntryLeftPartWidthConverter x:Key="PlaylistEntryLeftPartWidthConverter" />
 
 </ResourceDictionary>

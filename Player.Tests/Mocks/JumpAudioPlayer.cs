@@ -1,4 +1,5 @@
 ﻿using System;
+using Player.Audio;
 using Player.Core;
 
 namespace Player.Tests.Mocks
@@ -9,11 +10,7 @@ namespace Player.Tests.Mocks
     /// </summary>
     internal class JumpAudioPlayer : AudioPlayer
     {
-        public override TimeSpan CurrentTime
-        {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
-        }
+        public override TimeSpan CurrentTime { get; set; }
 
         public override AudioPlayerState PlaybackState
         {
@@ -26,9 +23,8 @@ namespace Player.Tests.Mocks
         }
 
         public override float Volume { get; set; }
-
         public override void Dispose()
-        {
+        {  
         }
 
         public override void Pause()

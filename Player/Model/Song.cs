@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Globalization;
+using Player.Audio;
 
-namespace Player.Core
+namespace Player.Model
 {
     public sealed class LocalSong : Song
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalSong"/> class.
         /// </summary>
-        /// <param name="path">The path of the file.</param>
-        /// <param name="audioType">The audio type.</param>
-        /// <param name="duration">The duration of the song.</param>
-        /// <param name="sourceDriveType">The drive type where the song comes from.</param>
+        /// <param name="path">The path of the file.</param> 
+        /// <param name="duration">The duration of the song.</param> 
         public LocalSong(string path, TimeSpan duration)
             : base(path, duration)
         { 
@@ -86,7 +84,7 @@ namespace Player.Core
          
         public string Title { get; set; }
 
-        public int TrackNumber { get; set; }
+        public int TrackNumber { get; set; } 
          
         public int Year { get; set; }
           

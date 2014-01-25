@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Player.Core
+namespace Player.IO
 {
     /// <summary>
     /// Provides data for the <see cref="DirectoryScanner.FileFound"/> event.

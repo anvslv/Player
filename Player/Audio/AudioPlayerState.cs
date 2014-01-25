@@ -1,4 +1,4 @@
-﻿namespace Player.Core
+﻿namespace Player.Audio
 {
     /// <summary>
     /// Represents the current playback state of an <see cref="AudioPlayer"/> object.

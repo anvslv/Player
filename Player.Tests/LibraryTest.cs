@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Player.Audio;
 using Player.Core;
+using Player.Model;
 using Player.Tests.Mocks;
 using Moq;
 using Xunit;

@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Security;
+using Player.Core;
 
-namespace Player.Core
+namespace Player.IO
 {
     /// <summary>
     /// Provides a directoy scanner to scan a directory recursively for files and directories.

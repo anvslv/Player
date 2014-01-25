@@ -1,8 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Security;
+using Player.Core;
 
-namespace Player.Core
+namespace Player.IO
 {
     public class FileScanner : IBaseScanner
     {

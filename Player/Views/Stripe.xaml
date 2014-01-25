@@ -1,7 +1,7 @@
-﻿<services:BaseWindow x:Class="Player.View.Views.Stripe"
+﻿<services:BaseWindow x:Class="Player.Views.Stripe"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"    
-        xmlns:services="clr-namespace:Player.View.Services"
+        xmlns:services="clr-namespace:Player.Services"
         Title="Stripe" 
         Height="{StaticResource StripeHeight}" 
         MinHeight="{StaticResource StripeHeight}"
@@ -13,33 +13,34 @@
         ResizeMode="{Binding ThisResizeMode}"
         ShowInTaskbar="False" 
         AllowsTransparency="True" 
-                     AllowDrop="True"
-        Background="{StaticResource PlayerBackgorund}" > 
-    <Grid> 
-        <DockPanel>
-            <Border x:Name="Draggable" Height="5" VerticalAlignment="Top" 
-                    DockPanel.Dock="Top" Background="{StaticResource Middle}"/>
+        AllowDrop="True"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"  
+        mc:Ignorable="d" 
+        d:DataContext="{d:DesignInstance services:DesignTimeStripeViewModel, IsDesignTimeCreatable=True}"
+        Background="{StaticResource PlayerBackgorund}" >
+    <Grid>  
+        <Slider DockPanel.Dock="Top"
+            Visibility="{Binding SongLoaded, 
+                Converter={StaticResource BooleanToVisibilityConverter}}"
+            Name="CusomSlider" 
+            Style="{StaticResource MyCustomStyleForSlider}" 
+            VerticalAlignment="Top"
+            IsMoveToPointEnabled="True"
+            Maximum="{Binding Path=TotalSeconds}"
+            Value="{Binding Path=CurrentSeconds}"  />
+ 
+        <DockPanel DockPanel.Dock="Top" x:Name="Draggable" Margin="5,3" Background="{StaticResource PlayerBackgorund}"> 
+            <TextBlock Foreground="{Binding IsPlaying, 
+                    Converter={StaticResource IsPlayingToForegroundConverter}}"
+                Text="{Binding LeftBlock}"
+                x:Name="LeftBlock" />
 
-            <Slider DockPanel.Dock="Top" 
-                    Name="CusomSlider" 
-                    Style="{StaticResource MyCustomStyleForSlider}" 
-                    Height="15" VerticalAlignment="Top"
-                    Margin="5,5,5,0" 
-                    IsMoveToPointEnabled="True"
-                    Maximum="{Binding Path=TotalSeconds}"
-                    Value="{Binding Path=CurrentSeconds}" />
-            
-            <Label DockPanel.Dock="Left" Content="{Binding Title}"
-                   x:Name="Title" Margin="5,0,5,5" 
-                   HorizontalAlignment="Left"
-                   VerticalAlignment="Bottom" />
-            <Label DockPanel.Dock="Right" 
-                   Content="{Binding Time}"
-                   x:Name="Time" Margin="5,0,5,5" 
-                   VerticalAlignment="Bottom"
-                   HorizontalAlignment="Right" />
-            
-        </DockPanel> 
-    </Grid>
-    
+            <TextBlock Foreground="{Binding IsPlaying, 
+                    Converter={StaticResource IsPlayingToForegroundConverter}}"
+                Text="{Binding RightBlock}"
+                x:Name="RightBlock"
+                    HorizontalAlignment="Right"/>
+            </DockPanel>
+    </Grid> 
 </services:BaseWindow>

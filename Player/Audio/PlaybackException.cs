@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Player.Core
+namespace Player.Audio
 {
     /// <summary>
     /// The exception that is thrown, when the <see cref="AudioPlayer"/> couldn't play a song.

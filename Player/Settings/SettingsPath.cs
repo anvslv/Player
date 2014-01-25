@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace Player.View.Services
+namespace Player.Settings
 {
     public static class SettingsPath
     {

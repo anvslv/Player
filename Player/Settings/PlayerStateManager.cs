@@ -1,14 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Xaml.Permissions;
-using System.Xml.Linq;
-using Player.Core;
+using System.Linq; 
+using System.Xml.Linq; 
+using Player.Model;
 
 namespace Player.Settings
 {
+    public interface IPlayerStateManager
+    {
+        void Save(Playlist playlist);
+        Playlist GetPlaylist();
+    }
+
     public class PlayerFileStateManager : IPlayerStateManager
     {
         private string path;
@@ -70,10 +75,16 @@ namespace Player.Settings
         }
 
         public static Playlist GetPlaylist(Stream s)
-        { 
-            IEnumerable<XElement> playlist = XDocument.Load(s)
-                .Descendants("Root")
-                .Descendants("Playlist").ToList();
+        {
+            IEnumerable<XElement> playlist;
+            try
+            { 
+                playlist = XDocument.Load(s)
+                    .Descendants("Root")
+                    .Descendants("Playlist").ToList();
+            } catch {
+                return new Playlist();
+            }
 
             IEnumerable<Song> songs = playlist
                 .Descendants("Entries")
@@ -95,7 +106,7 @@ namespace Player.Settings
             float volume = playlist
                 .Descendants("Volume")
                 .Select(v =>
-                    float.Parse(v.Attribute("Value").Value))
+                    float.Parse(v.Attribute("Value").Value, CultureInfo.InvariantCulture.NumberFormat))
                 .FirstOrDefault();
 
             int currentSongIndex = playlist
@@ -107,7 +118,7 @@ namespace Player.Settings
             TimeSpan currentTime = playlist
                 .Descendants("CurrentTime")
                 .Select(e => 
-                    TimeSpan.FromTicks(Int64.Parse(e.Attribute("CurrentPosition").Value)))
+                    TimeSpan.FromTicks(Int64.Parse(e.Attribute("Value").Value)))
                 .FirstOrDefault();
 
             var p = new Playlist();

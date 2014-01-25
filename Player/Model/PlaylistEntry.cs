@@ -1,6 +1,7 @@
 ﻿using System;
+using Player.Core;
 
-namespace Player.Core
+namespace Player.Model
 {
     public class PlaylistEntry
     {

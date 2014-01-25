@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Player.Core
+namespace Player.IO
 {
     public interface IBaseScanner 
     { 

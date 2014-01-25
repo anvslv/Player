@@ -1,10 +1,18 @@
 ﻿using System;
 using System.Drawing;
-using System.Windows.Forms;
+using System.Windows.Forms; 
 using Application = System.Windows.Application;
 
-namespace Player.View.Services
+namespace Player.Services
 {
+    public static class TimespanExtensions
+    {
+        public static string ToMinutesAndSeconds(this TimeSpan interval)
+        {
+            return string.Format("{0}:{1:D2}", interval.Days * 24 * 60 + interval.Hours * 60 + interval.Minutes, interval.Seconds);
+        }
+    }
+
     public sealed class Tray
     {
         private static readonly Tray instance = new Tray();
@@ -17,14 +25,16 @@ namespace Player.View.Services
 
         private Tray()
         {
-            _trayIcon = new NotifyIcon();
-            _trayIcon.Icon = new Icon(SystemIcons.Application, 40, 40);
-            var menu = new ContextMenu();
-            var item = new MenuItem { Text = "Exit" };
+            var item = new MenuItem { Text = Resources.Exit };
             item.Click += ExitApplication;
-            menu.MenuItems.Add(item);
+
+            var menu = new ContextMenu();
+            menu.MenuItems.Add(item); 
+            
+            _trayIcon = new NotifyIcon();
+            _trayIcon.Icon = Icon.FromHandle(Resources.Icon.GetHicon());
             _trayIcon.ContextMenu = menu;
-            _trayIcon.Visible = true;
+            _trayIcon.Visible = true; 
         }
 
         private void ExitApplication(object sender, EventArgs eventArgs)

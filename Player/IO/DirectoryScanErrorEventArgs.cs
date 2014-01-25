@@ -1,6 +1,7 @@
 ﻿using System;
+using Player.Core;
 
-namespace Player.Core
+namespace Player.IO
 {
     /// <summary>
     /// Provides data for the <see cref="DirectoryScanner.DirectoryScanError"/> event.

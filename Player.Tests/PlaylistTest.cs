@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Player.Core;
+using Player.Model;
 using Xunit;
 
 namespace Player.Tests

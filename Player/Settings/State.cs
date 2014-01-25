@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Player.View.Services;
+using Player.Services;
 
 namespace Player.Settings
 {

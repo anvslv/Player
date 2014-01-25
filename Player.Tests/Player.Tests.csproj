@@ -52,6 +52,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="TimespanSerializationTest.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="LibraryFillEventArgsTest.cs" />
     <Compile Include="LibraryReaderTest.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

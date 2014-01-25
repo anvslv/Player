@@ -2,7 +2,7 @@
 using System.IO;
 using System.Xml.Serialization;
 
-namespace Player.View.Services
+namespace Player.Services
 { 
     public class Serialization {
       

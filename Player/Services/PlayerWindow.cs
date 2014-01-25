@@ -1,4 +1,4 @@
-namespace Player.View.Services
+namespace Player.Services
 {
     public class PlayerWindow
     {

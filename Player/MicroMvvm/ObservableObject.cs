@@ -1,9 +1,9 @@
-﻿using System;
+﻿//Event Design: http://msdn.microsoft.com/en-us/library/ms229011.aspx
+
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq.Expressions;
-
-//Event Design: http://msdn.microsoft.com/en-us/library/ms229011.aspx
 
 namespace MicroMvvm
 {

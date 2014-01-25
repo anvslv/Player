@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Player.Core
+namespace Player.IO
 {
     /// <summary>
     /// Specifies which error occured during the directory scan.

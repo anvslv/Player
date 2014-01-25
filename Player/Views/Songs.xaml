@@ -1,40 +1,96 @@
-﻿<view:BaseWindow x:Class="Player.View.Views.Songs"
+﻿<services:BaseWindow x:Class="Player.Views.Songs"
+        xmlns:services="clr-namespace:Player.Services"   
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"  
-        Title="Songs" 
-        Height="{StaticResource SongsHeight}" 
-        MinHeight="{StaticResource SongsHeight}"
-        MaxHeight="{StaticResource SongsHeight}"
-        Width="{StaticResource SongsWidth}" 
-        MaxWidth="{StaticResource SongsMaxWidth}" 
-        MinWidth="{StaticResource SongsMinWidth}" 
+        Title="Songs"  
         WindowStyle="None"
         ShowInTaskbar="False"  
         AllowsTransparency="True"     
         ResizeMode="{Binding ThisResizeMode}"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-        xmlns:view="clr-namespace:Player.View.Services"   
-        mc:Ignorable="d" d:DesignHeight="250" d:DesignWidth="500"
-        d:DataContext="{d:DesignInstance view:DesignTimePlaylistViewModel, IsDesignTimeCreatable=True}"
-        Background="{StaticResource PlayerBackgorund}" > 
+        mc:Ignorable="d" d:DesignHeight="350" d:DesignWidth="400" 
+        d:DataContext="{d:DesignInstance services:DesignTimePlaylistViewModel, IsDesignTimeCreatable=True}"
+        Background="{StaticResource PlayerBackgorund}"   
+        MinHeight="{StaticResource SongsMinHeight}"
+        MaxHeight="{StaticResource SongsMaxHeight}"
+        MaxWidth="{StaticResource SongsMaxWidth}" 
+        MinWidth="{StaticResource SongsMinWidth}" >
+    <!--Height="{StaticResource SongsHeight}"
+        Width="{StaticResource SongsWidth}"-->
     <Grid Margin="0" >
         <Grid.RowDefinitions>
             <RowDefinition Height="5" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Border x:Name="Draggable" Height="5" Grid.Row="0" Background="{StaticResource Middle}"/>
-        <ListView ItemsSource="{Binding Songs}"  
-                Grid.Row="1" 
-                SelectedItem="{Binding CurrentSong}"  
-                Margin="0" HorizontalAlignment="Stretch" 
-                Background="Transparent" BorderThickness="0"
+
+        <Rectangle x:Name="Draggable" Height="5" Grid.Row="0">
+            <Rectangle.Fill>
+                <SolidColorBrush x:Name="DraggableBrush" Color="{StaticResource PlayerBackgroundColor}"></SolidColorBrush>
+            </Rectangle.Fill>
+            <Rectangle.Triggers>
+                <EventTrigger RoutedEvent="Border.MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetName="DraggableBrush"  
+                                            Storyboard.TargetProperty="Color" 
+                                            To="{StaticResource MiddleColor}" 
+                                            Duration="0:0:0.5" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+
+                <EventTrigger RoutedEvent="Border.MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetName="DraggableBrush"  
+                                            Storyboard.TargetProperty="Color" 
+                                            To="{StaticResource PlayerBackgroundColor}" 
+                                            Duration="0:0:0.5" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+
+                <EventTrigger RoutedEvent="Border.MouseLeftButtonUp">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetName="DraggableBrush"  
+                                            Storyboard.TargetProperty="Color" 
+                                            To="{StaticResource PlayerBackgroundColor}" 
+                                            Duration="0:0:0.5" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+
+                <!--<EventTrigger RoutedEvent="Border.MouseLeftButtonDown">
+                    <BeginStoryboard Name="Leave">
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetName="DraggableBrush"  
+                                            Storyboard.TargetProperty="Color" 
+                                            To="{StaticResource MiddleColor}" 
+                                            Duration="0:0:0.5" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>-->
+
+            </Rectangle.Triggers>
+        </Rectangle>
+
+        <ListView x:Name="SongsListView" ItemsSource="{Binding Songs}"  
+                KeyUp="PlaylistKeyUp"
+                SelectionChanged="PlaylistSelectionChanged" 
+                Grid.Row="1"                                    
+                FocusVisualStyle="{x:Null}"
+                Margin="0"  
+                HorizontalAlignment="Stretch" 
+                Background="Transparent" 
+                BorderThickness="0"
                 HorizontalContentAlignment="Stretch"> 
             <ListView.Style>
-                <Style TargetType="ListView"> 
+                <Style TargetType="ListView">
                     <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden" />
+                    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden" />
                     <Setter Property="BorderThickness" Value="0"></Setter>
-
                 </Style>
             </ListView.Style>
             <ListView.ItemContainerStyle> 
@@ -60,35 +116,56 @@
                                     <Trigger Property="IsFocused" Value="True">
                                         <Setter Property="Background" Value="{StaticResource Middle}" />
                                         <Setter Property="Foreground" Value="{StaticResource SelectedForeground}" />
-                                    </Trigger>
+                                    </Trigger> 
                                 </ControlTemplate.Triggers >
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
+                    <EventSetter Event="MouseDoubleClick" Handler="PlaylistDoubleClick" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=IsPlaying}" Value="True">
+                            <Setter Property="FontWeight" Value="Bold" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Path=IsCorrupted}" Value="True">
+                            <Setter Property="Foreground" Value="DarkRed" />
+                        </DataTrigger>
+                    </Style.Triggers>
                 </Style> 
             </ListView.ItemContainerStyle> 
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*" /> 
-                            <ColumnDefinition Width="60" />
+                            <!--<ColumnDefinition Width="{Binding Path=ActualWidth, 
+                                ElementName=SongsListView, 
+                                Converter={StaticResource PlaylistEntryLeftPartWidthConverter}, 
+                                ConverterParameter={Binding Path=TimeColumnDefinition}}" />-->
+                            <ColumnDefinition>
+                                <ColumnDefinition.Width>
+                                    <MultiBinding Converter="{StaticResource PlaylistEntryLeftPartWidthConverter}">
+                                        <Binding ElementName="SongsListView" Path="ActualWidth"></Binding>
+                                        <Binding ElementName="TimeColumnDefinition" Path="ActualWidth"></Binding>
+                                    </MultiBinding>
+                                </ColumnDefinition.Width>
+                            </ColumnDefinition>
+                            <ColumnDefinition x:Name="TimeColumnDefinition" Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="{Binding GlobalTrackNumberString}" 
-                                   Foreground="{StaticResource Middle}"
-                                   HorizontalAlignment="Left" Margin="3,0,0,0"></TextBlock>
-                        <TextBlock Grid.Column="1" Text="{Binding FullSongTitleString}" 
-                                   HorizontalAlignment="Left" Margin="0,0,5,0"></TextBlock>
-                        <TextBlock Grid.Column="2" Text="{Binding AlbumAndYearString}" 
-                                   Foreground="{StaticResource Middle}"
-                                   HorizontalAlignment="Left" Margin="0,0,5,0"></TextBlock> 
-                        <TextBlock Grid.Column="3" Text="{Binding DurationString}" 
+                        <TextBlock Grid.Column="1" Text="{Binding DurationString}" 
                                    HorizontalAlignment="Right" Margin="0,0,5,0"></TextBlock>
+                        <DockPanel Grid.Column="0">
+                        <TextBlock Text="{Binding GlobalTrackNumberString}" 
+                                Foreground="{StaticResource Middle}"
+                                HorizontalAlignment="Left" Margin="3,0,0,0"></TextBlock>
+                        <TextBlock  Text="{Binding FullSongTitleString}" 
+                                HorizontalAlignment="Left" Margin="0,0,5,0"></TextBlock>
+                        <TextBlock  Text="{Binding AlbumAndYearString}" 
+                                Foreground="{StaticResource Middle}"
+                                HorizontalAlignment="Left" Margin="0,0,5,0"></TextBlock>
+                        </DockPanel>
                     </Grid>
+                    
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
     </Grid>
-</view:BaseWindow>
+</services:BaseWindow>

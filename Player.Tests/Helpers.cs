@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Player.Core;
+using Player.Model;
 using Player.Settings;
 using Moq;
 
@@ -70,7 +71,7 @@ namespace Player.Tests
             return "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
                     "<Root>" +
                     "  <Playlist>" +
-                    "    <Volume Value=\"0\" />" +
+                    "    <Volume Value=\"0.5\" />" +
                     "    <CurrentSongIndex Value=\"0\" />" +
                     "    <CurrentTime Value=\"0\" />" +
                     "    <Entries>" +

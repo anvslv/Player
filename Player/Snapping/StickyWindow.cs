@@ -1,3 +1,6 @@
+// http://www.codeproject.com/KB/cs/stickywindows.aspx
+// http://programminghacks.net/2009/10/19/download-snapping-sticky-magnetic-windows-for-wpf/
+
 using System;
 using System.Windows.Forms;
 using StickyWindowLibrary;
@@ -47,6 +50,7 @@ namespace Blue.Private.Win32Imports
 			public const int WM_LBUTTONDOWN                  = 0x0201;
 			public const int WM_LBUTTONUP                    = 0x0202;
 			public const int WM_KEYDOWN                      = 0x0100;
+            public const int WM_SYSCOMMAND                   = 0x0112;
 		}
 
 		/// <summary>
@@ -83,7 +87,9 @@ namespace Blue.Private.Win32Imports
 
 			public const int HTOBJECT            = 19;
 			public const int HTCLOSE             = 20;
-			public const int HTHELP              = 21;
+            public const int HTHELP = 21;
+
+            public const int HTCAPTIONBAR        = 61458;
 		}
 
 		public class Bit
@@ -98,9 +104,9 @@ namespace Blue.Private.Win32Imports
 			}
 		}
 
-		[DllImport("user32.dll",CharSet=CharSet.Auto)]
+		[DllImport("user32.dll", CharSet=CharSet.Auto)]
 		public static extern int SendMessage(IntPtr hWnd, int wMsg, int wParam, IntPtr lParam);
-
+          
 		public static IntPtr MakeLParam(int x, int y)
 		{
 			return (IntPtr)((y << 16) | (x & 0xffff));
@@ -122,6 +128,7 @@ namespace Blue.Windows
 	/// You get a nice way of organizing multiple top-level windows.
 	/// Quite similar with WinAmp 2.x style of sticking the windows
 	/// </summary>
+    //[DebuggerStepThrough]
 	public class StickyWindow : System.Windows.Forms.NativeWindow
 	{
 		/// <summary>
@@ -256,12 +263,10 @@ namespace Blue.Windows
 		}
 
 		#endregion
-
-
-
+         
 		#region StickyWindow Constructor
   
-		// <summary>
+		/// <summary>
 		/// Make the window Sticky
 		/// </summary>
 		/// <param name="form">Window to be made sticky</param>
@@ -335,8 +340,9 @@ namespace Blue.Windows
 		private bool DefaultMsgProcessor ( ref Message m )
 		{
 			switch ( m.Msg )
-			{ 
-				case Win32.WM.WM_NCLBUTTONDOWN: 
+			{
+                case Win32.WM.WM_NCLBUTTONDOWN:
+                case Win32.WM.WM_SYSCOMMAND: 
 				{
 					originalForm.Activate();
 					mousePoint.X = (short)Win32.Bit.LoWord ( (int)m.LParam );
@@ -368,8 +374,9 @@ namespace Blue.Windows
 			offsetPoint			= point;
 
 			switch ( iHitTest )
-			{ 
-				case Win32.HT.HTCAPTION: 
+			{
+                case Win32.HT.HTCAPTION:
+                case Win32.HT.HTCAPTIONBAR: 
 				{	// request for move
 					if ( stickOnMove )
 					{ 
@@ -380,7 +387,6 @@ namespace Blue.Windows
 					}
 					else
 						return false;	// leave default processing
-					
 				}
 
 				// requests for resize
@@ -439,7 +445,8 @@ namespace Blue.Windows
 					EndResize();
 					break;
 				}
-				case Win32.WM.WM_MOUSEMOVE:
+                case Win32.WM.WM_MOUSEMOVE:
+                case Win32.WM.WM_SYSCOMMAND:
 				{
 					mousePoint.X = (short)Win32.Bit.LoWord ( (int)m.LParam );
 					mousePoint.Y = (short)Win32.Bit.HiWord ( (int)m.LParam );
@@ -766,7 +773,7 @@ namespace Blue.Windows
 				}
 			}
 		}
-#endregion
+        #endregion
 
 		#region Utilities
 		private int NormalizeInside ( int iP1, int iM1, int iM2 )

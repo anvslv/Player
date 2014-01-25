@@ -1,9 +1,13 @@
 ﻿ 
-using System.Windows; 
-using Player.View.Services;
-using Player.View.ViewModels;
+using System;
+using System.ComponentModel;
+using System.Windows;
+using System.Windows.Input;
+using Blue.Private.Win32Imports;
+using Player.Services;
+using Player.ViewModels;
 
-namespace Player.View.Views
+namespace Player.Views
 {
     public partial class Stripe : BaseWindow
     {
@@ -11,25 +15,52 @@ namespace Player.View.Views
 
         public Stripe()
         { 
-            InitializeComponent(); 
-            Draggable.PreviewMouseDown += OnPreviewMouseDown;
-            Draggable.PreviewMouseUp += OnPreviewMouseUp; 
-            Drop += OnDrop; 
+            InitializeComponent();
+            Draggable.MouseLeftButtonDown += DraggableOnMouseLeftButtonDown;
+            Draggable.MouseLeftButtonUp += DraggableOnMouseLeftButtonUp; 
+            Drop += OnDrop;
+            Closing += OnClosing;
+            
+            if (DesignerProperties.GetIsInDesignMode(this))
+                DataContext = new DesignTimeStripeViewModel();
+            else
+            {
+                viewModel = new StripeViewModel(LibraryManager.Instance());
+                DataContext = viewModel;
+            }
+
+            WireCommands();
+        }
+          
+        private void WireCommands()
+        {
+            this.Draggable.DoubleClick(viewModel.PauseContinueCommand);
+            this.RightButtonDragLeft(viewModel.PreviousSongCommand);
+            this.RightButtonDragRight( viewModel.NextSongCommand);
+            this.RightButtonDragDown( viewModel.ShowHidePlaylist);
+            this.ScrollDown (viewModel.DecreaseVolume);
+            this.ScrollUp(viewModel.IncreaseVolume);
+        }
+
+        private void OnClosing(object sender, CancelEventArgs cancelEventArgs)
+        { 
+            viewModel.Dispose();
+        }
+
+        public override ResizeMode GetResizeMode()
+        {
+            return ResizeMode.NoResize;
         }
 
         private void OnDrop(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                var files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
                 viewModel.HandleDropFiles(files); 
             } 
         }
-          
-        public override ResizeMode ThisResizeMode()
-        {
-            return ResizeMode.NoResize;
-        } 
+           
     }
 }

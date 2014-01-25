@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using Player.Core;
+using Player.Model;
 using Player.Settings;
 using Xunit;
 

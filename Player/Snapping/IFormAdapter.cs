@@ -1,8 +1,7 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
+﻿// http://programminghacks.net/2009/10/19/download-snapping-sticky-magnetic-windows-for-wpf/
+
+using System; 
+using System.Drawing; 
 
 namespace StickyWindowLibrary
 {

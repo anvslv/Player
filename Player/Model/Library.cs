@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
+using Player.Audio;
+using Player.Core;
 using Player.Settings;
 
-namespace Player.Core
+namespace Player.Model
 { 
     public sealed class Library : IDisposable
     { 
@@ -18,8 +17,7 @@ namespace Player.Core
         private readonly object songLock;
         private bool abortSongAdding;
         private AudioPlayer currentPlayer;
-        private float volume;
-
+        
         public Library(IPlayerStateManager playerStateManager)
         {
             this.songLock = new object(); 
@@ -41,6 +39,8 @@ namespace Player.Core
         /// Occurs when a corrupted song has been attempted to be played.
         /// </summary>
         public event EventHandler SongCorrupted;
+        
+        public event EventHandler FirstSongSelected;
 
         /// <summary>
         /// Occurs when a song has finished the playback.
@@ -84,17 +84,31 @@ namespace Player.Core
         /// </summary>
         public TimeSpan CurrentTime
         {
-            get { return this.CurrentPlaylist.CurrentTime; }
+            get
+            {
+                if (this.currentPlayer != null)
+                {
+                    return this.currentPlayer.CurrentTime;
+                }
+                return this.CurrentPlaylist.CurrentTime;
+            }
             set
-            { 
-                this.CurrentPlaylist.CurrentTime = value;
+            {
                 if (this.currentPlayer != null)
                 {
                     this.currentPlayer.CurrentTime = value;
                 }
             }
         }
-
+         
+        /// <summary>
+        /// Gets the duration of the current song.
+        /// </summary>
+        public TimeSpan TotalTime
+        {
+            get { return this.currentPlayer == null ? TimeSpan.Zero : this.currentPlayer.TotalTime; }
+        }
+          
         /// <summary>
         /// Gets a value indicating whether the playback is paused.
         /// </summary>
@@ -122,17 +136,12 @@ namespace Player.Core
         /// </summary>
         public Song LoadedSong
         {
-            get { return this.currentPlayer == null ? null : this.currentPlayer.Song; }
+            get
+            {
+                return this.currentPlayer == null ? null : this.currentPlayer.Song;
+            }
         }
 
-        /// <summary>
-        /// Gets the duration of the current song.
-        /// </summary>
-        public TimeSpan TotalTime
-        {
-            get { return this.currentPlayer == null ? TimeSpan.Zero : this.currentPlayer.TotalTime; }
-        }
-         
         /// <summary>
         /// Gets or sets the current volume.
         /// </summary>
@@ -206,8 +215,30 @@ namespace Player.Core
             this.currentPlayer.Play();
         }
          
+        private void Save()
+        {
+            this.CurrentPlaylist.CurrentTime = currentPlayer.CurrentTime;
+            this.playerStateManager.Save(this.CurrentPlaylist);
+        }
+
+        private void Load()
+        {
+            this.CurrentPlaylist = this.playerStateManager.GetPlaylist();
+            
+            if (this.PlaylistChanged != null)
+                this.PlaylistChanged(this, EventArgs.Empty);
+
+            var currentSongIndex = this.CurrentPlaylist.CurrentSongIndex;
+            if (currentSongIndex != null && this.CurrentPlaylist.Any())
+            {
+                InternSelectSong(currentSongIndex.Value, false, this.CurrentPlaylist.CurrentTime);
+            }
+        }
+
         public void Dispose()
         {
+            Save();
+
             if (this.currentPlayer != null)
             {
                 this.currentPlayer.Dispose();
@@ -244,7 +275,8 @@ namespace Player.Core
             if (!this.CurrentPlaylist.CanPlayPreviousSong || !this.CurrentPlaylist.CurrentSongIndex.HasValue)
                 throw new InvalidOperationException("The previous song couldn't be played.");
 
-            this.PlaySong(this.CurrentPlaylist.CurrentSongIndex.Value - 1);
+            int prevIndex = this.CurrentPlaylist.GetPreviousIndex();
+            this.InternSelectSong(prevIndex);
         }
 
         /// <summary>
@@ -255,8 +287,8 @@ namespace Player.Core
         {
             if (playlistIndex < 0)
                 throw new ArgumentOutOfRangeException("playlistIndex");
-
-            this.InternPlaySong(playlistIndex);
+             
+            this.InternSelectSong(playlistIndex);
         }
          
         /// <summary>
@@ -282,12 +314,7 @@ namespace Player.Core
 
             this.RemoveFromPlaylist(this.CurrentPlaylist, songList);
         }
-
-        public void Save()
-        {  
-            this.playerStateManager.Save(this.CurrentPlaylist);
-        }
-
+         
         public void ShufflePlaylist()
         {
             this.CurrentPlaylist.Shuffle();
@@ -324,13 +351,16 @@ namespace Player.Core
                         lock (this.disposeLock)
                         {
                             this.CurrentPlaylist.AddSong(e.Song);
+                            if (CurrentPlaylist.CurrentSongIndex == 0)
+                            {
+                                InternSelectSong(0, false);
+                            }
                         }
                     }
-
+                    
                     if (this.SongAdded != null)
                         this.SongAdded(this,
-                            new LibraryFillEventArgs(e.Song, finder.TagsProcessed, finder.CurrentTotalSongs));
-
+                            new LibraryFillEventArgs(e.Song, finder.TagsProcessed, finder.CurrentTotalSongs)); 
                 };
 
                 finder.Start(); 
@@ -374,27 +404,30 @@ namespace Player.Core
             if (!this.CurrentPlaylist.CanPlayNextSong || !this.CurrentPlaylist.CurrentSongIndex.HasValue)
                 throw new InvalidOperationException("The next song couldn't be played.");
 
-            int nextIndex = this.CurrentPlaylist.CurrentSongIndex.Value + 1;
+            int nextIndex = this.CurrentPlaylist.GetNextIndex();
 
-            this.InternPlaySong(nextIndex);
+            this.InternSelectSong(nextIndex);
         }
 
-        private void InternPlaySong(int playlistIndex)
+        private void InternSelectSong(int playlistIndex, bool playThisSong = true, TimeSpan position = new TimeSpan())
         {
             if (playlistIndex < 0)
-                throw new ArgumentOutOfRangeException("playlistIndex");
-             
+                throw new ArgumentOutOfRangeException("playlistIndex"); 
+            
             this.CurrentPlaylist.CurrentSongIndex = playlistIndex;
 
             Song song = this.CurrentPlaylist[playlistIndex].Song;
 
             this.RenewCurrentPlayer(song);
-
+               
             Task.Factory.StartNew(() =>
             {
                 try
                 {
                     this.currentPlayer.Load();
+                    this.currentPlayer.CurrentTime = position;
+                    if (this.FirstSongSelected != null)
+                        this.FirstSongSelected(this, EventArgs.Empty);
                 }
 
                 catch (SongLoadException)
@@ -407,49 +440,46 @@ namespace Player.Core
 
                     return;
                 }
-
-                try
+                if (playThisSong)
                 {
-                    this.currentPlayer.Play();
+                    try
+                    {
+                        this.currentPlayer.Play();
+                    }
+
+                    catch (PlaybackException)
+                    {
+                        song.IsCorrupted = true;
+                        if (this.SongCorrupted != null)
+                            this.SongCorrupted(this, EventArgs.Empty);
+
+                        this.HandleSongCorruption();
+
+                        return;
+                    }
+
+                    if (this.SongStarted != null)
+                        this.SongStarted(this, EventArgs.Empty);
                 }
-
-                catch (PlaybackException)
-                {
-                    song.IsCorrupted = true;
-                    if (this.SongCorrupted != null)
-                        this.SongCorrupted(this, EventArgs.Empty);
-
-                    this.HandleSongCorruption();
-
-                    return;
-                }
-
-                if (this.SongStarted != null)
-                    this.SongStarted(this, EventArgs.Empty);
-            });
+            }); 
         }
-
-        private void Load()
-        { 
-            this.CurrentPlaylist = this.playerStateManager.GetPlaylist(); 
-        }
-
+           
         private void RemoveFromPlaylist(Playlist playlist, IEnumerable<int> indexes)
         {
-            bool stopCurrentSong = playlist == this.CurrentPlaylist &&
-                                   indexes.Any(index => index == this.CurrentPlaylist.CurrentSongIndex);
+            //bool stopCurrentSong = playlist == this.CurrentPlaylist &&
+            //                       indexes.Any(index => index == this.CurrentPlaylist.CurrentSongIndex);
 
             playlist.RemoveSongs(indexes);
 
             if (this.PlaylistChanged != null)
                 this.PlaylistChanged(this, EventArgs.Empty);
 
-            if (stopCurrentSong)
-            {
-                this.currentPlayer.Stop();
-                if (this.SongFinished != null)
-                    this.SongFinished(this, EventArgs.Empty);
-            }
+            //if (stopCurrentSong)
+            //{
+            //    this.currentPlayer.Stop();
+            //    if (this.SongFinished != null)
+            //        this.SongFinished(this, EventArgs.Empty);
+            //}
         }
 
         private void RemoveFromPlaylist(Playlist playlist, IEnumerable<Song> songList)

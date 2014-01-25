@@ -1,6 +1,7 @@
 ﻿using System;
 using Player.Core;
 using Moq;
+using Player.Model;
 using Xunit;
 
 namespace Player.Tests

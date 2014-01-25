@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel; 
-using System.Linq; 
+using System.Linq;
+using Player.Core;
 
-namespace Player.Core
+namespace Player.Model
 {
     public class Playlist : IEnumerable<PlaylistEntry>
     {
@@ -14,6 +14,7 @@ namespace Player.Core
         internal Playlist()
         { 
             this.playlist = new List<PlaylistEntry>();
+            this.Volume = 0.5f;
         }
 
         /// <summary>
@@ -24,7 +25,7 @@ namespace Player.Core
         /// </value>
         public bool CanPlayNextSong
         {
-            get { return this.CurrentSongIndex.HasValue && this.ContainsIndex(this.CurrentSongIndex.Value + 1); }
+            get { return this.CurrentSongIndex.HasValue; }
         }
 
         /// <summary>
@@ -35,7 +36,29 @@ namespace Player.Core
         /// </value>
         public bool CanPlayPreviousSong
         {
-            get { return this.CurrentSongIndex.HasValue && this.ContainsIndex(this.CurrentSongIndex.Value - 1); }
+            get { return this.CurrentSongIndex.HasValue; }
+        }
+
+        public int GetPreviousIndex()
+        {
+            if (this.CurrentSongIndex == null)
+                throw new ArgumentNullException("CurrentSongIndex");
+
+            int previousIndex = this.CurrentSongIndex.Value - 1;
+            if (previousIndex < 0)
+                return playlist.Count - 1;
+            return previousIndex;
+        }
+
+        public int GetNextIndex()
+        {
+            if (this.CurrentSongIndex == null)
+                throw new ArgumentNullException("CurrentSongIndex");
+
+            int nextIndex = this.CurrentSongIndex.Value + 1;
+            if (this.playlist.Count == nextIndex)
+                return 0;
+            return nextIndex;
         }
 
         /// <summary>
@@ -127,7 +150,8 @@ namespace Player.Core
         {
             if (song == null)
                 throw new ArgumentNullException("song");
-             
+            if (currentSongIndex == null)
+                currentSongIndex = 0;
             this.playlist.Add(new PlaylistEntry(this.playlist.Count, song));  
         }
          

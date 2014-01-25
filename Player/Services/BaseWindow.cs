@@ -1,26 +1,28 @@
-﻿using System;
+﻿// http://programminghacks.net/2009/10/19/download-snapping-sticky-magnetic-windows-for-wpf/
+
+using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 using Blue.Private.Win32Imports;
-using Blue.Windows;
-using Player.Core; 
+using Blue.Windows; 
 using Player.Settings;
 
-namespace Player.View.Services 
+namespace Player.Services 
 {
     public abstract class BaseWindow : Window, IDisposable
     {
         public StickyWindow StickyWindow;
         private bool _isHidden;
+        public abstract ResizeMode GetResizeMode();
 
         protected BaseWindow()
         {
-            Loaded += OnLoaded;
+            Loaded += OnLoaded; 
             Closing += OnClosing;
-            Tray.Instance.AddMouseDoubleClick(TrayIconMouseDoubleClick);
+            Tray.Instance.AddMouseDoubleClick(TrayIconMouseDoubleClick); 
         }
-
+         
         public void Dispose()
         {
             Tray.Instance.DisposeIcon();
@@ -45,10 +47,11 @@ namespace Player.View.Services
         {
             StickyWindow = new StickyWindow(this);
             StickyWindow.StickToScreen = true;
-
-            LocationChanged += OnLocationChanged;
+            StickyWindow.StickGap = 5;
+            //LocationChanged += OnLocationChanged;
         }
 
+        // todo causes jumpiness
         private void OnLocationChanged(object sender, EventArgs e)
         {
             Point mousePoint = Mouse.GetPosition(this);
@@ -60,30 +63,37 @@ namespace Player.View.Services
                 Win32.MakeLParam(Convert.ToInt32(mousePoint.X), Convert.ToInt32(mousePoint.Y)));
         }
 
-        public abstract ResizeMode ThisResizeMode();
-
-        public void OnPreviewMouseDown(object sender, MouseButtonEventArgs e)
+        public void DraggableOnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
             {
                 if (ResizeMode != ResizeMode.NoResize)
                 {
-                    ResizeMode = ResizeMode.NoResize;
                     UpdateLayout();
                 }
-                DragMove();
+
+                Point mousePoint = Mouse.GetPosition(this);
+                Point screenPoint = PointToScreen(mousePoint);
+
+                // this shomehow removes jumpiness, WM_SYSCOMMAND and HTCAPTIONBAR are from part DragMove() internals
+                Win32.SendMessage(StickyWindow.Handle, Win32.WM.WM_SYSCOMMAND, Win32.HT.HTCAPTIONBAR,
+                    Win32.MakeLParam(Convert.ToInt32(screenPoint.X), Convert.ToInt32(screenPoint.Y)));
+                //Win32.SendMessage(StickyWindow.Handle, Win32.WM.WM_LBUTTONUP, Win32.HT.HTCAPTIONBAR,
+                //   Win32.MakeLParam(Convert.ToInt32(screenPoint.X), Convert.ToInt32(screenPoint.Y)));
+
+                //DragMove();
             }
         }
-
-        public void OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
+         
+        public void DraggableOnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             if (ResizeMode == ResizeMode.NoResize)
             {
-                ResizeMode = ThisResizeMode();
+                ResizeMode = GetResizeMode();
                 UpdateLayout();
             }
-        }
-
+        } 
+         
         private void TrayIconMouseDoubleClick(object sender, EventArgs e)
         {
             if (_isHidden == false)
