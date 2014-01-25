@@ -12,8 +12,7 @@ namespace Player.Services
 {
     public abstract class BaseWindow : Window, IDisposable
     {
-        public StickyWindow StickyWindow;
-        private bool _isHidden;
+        public StickyWindow StickyWindow; 
         public abstract ResizeMode GetResizeMode();
 
         protected BaseWindow()
@@ -96,16 +95,9 @@ namespace Player.Services
          
         private void TrayIconMouseDoubleClick(object sender, EventArgs e)
         {
-            if (_isHidden == false)
-            {
-                _isHidden = true;
-                Hide();
-            }
-            else
-            {
-                _isHidden = false;
-                Show();
-            }
+            ShowHideWindow();
         }
+
+        public abstract void ShowHideWindow(); 
     }
 }

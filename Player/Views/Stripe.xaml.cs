@@ -1,9 +1,5 @@
-﻿ 
-using System;
-using System.ComponentModel;
-using System.Windows;
-using System.Windows.Input;
-using Blue.Private.Win32Imports;
+﻿using System.ComponentModel;
+using System.Windows; 
 using Player.Services;
 using Player.ViewModels;
 
@@ -46,6 +42,19 @@ namespace Player.Views
         { 
             viewModel.Dispose();
         }
+
+        public override void ShowHideWindow()
+        {
+            if (IsVisible)
+            { 
+                Hide();
+            }
+            else
+            { 
+                Show();
+            }
+        }
+         
 
         public override ResizeMode GetResizeMode()
         {

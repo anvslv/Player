@@ -35,6 +35,21 @@ namespace Player.Views
             StickyWindow.StickToOther = true;
             StickyWindow.StickOnResize = true; 
         }
+         
+
+        public override void ShowHideWindow()
+        {
+            if(IsHidden || IsVisible)
+            {
+                Hide();
+            }
+            else
+            {
+                Show();
+            }
+        }
+
+        public bool IsHidden { get; set; }
 
         public override sealed ResizeMode GetResizeMode()
         {

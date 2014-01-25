@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq; 
 using System.Xml.Linq;
-using Player.Services;
-using Player.Settings;
+using Player.Model;
+using Player.Services; 
 using Player.Views;
 
 namespace Player.Settings
@@ -19,7 +19,7 @@ namespace Player.Settings
     class WindowStateManager : IWindowStateManager
     {
         private string path;
-        private BaseWindow songs;
+        private Songs songs;
         private BaseWindow stripe;
 
         private static IWindowStateManager _instance;
@@ -133,10 +133,8 @@ namespace Player.Settings
 
         public void ShowHidePlaylist()
         {
-            if (songs.IsVisible)
-                songs.Hide(); 
-            else 
-                songs.Show();
+            songs.IsHidden = !songs.IsHidden;
+            songs.ShowHideWindow();
         }
     } 
 }

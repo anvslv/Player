@@ -20,9 +20,9 @@ namespace Player.Services
         private static IObservable<T> BufferWithTimeAndCount<T>(this IObservable<T> src, TimeSpan t, int count)
         {
             return src.Timestamp()
-                            .Buffer(count)
-                            .Where(s => s[s.Count - 1].Timestamp - s[0].Timestamp <= t)
-                            .Select(arr => arr[arr.Count - 1].Value);
+                .Buffer(count)
+                .Where(s => s[s.Count - 1].Timestamp - s[0].Timestamp <= t)
+                .Select(arr => arr[arr.Count - 1].Value);
         }
 
         private static IObservable<Vector> RightButtonDrag(this FrameworkElement element)
