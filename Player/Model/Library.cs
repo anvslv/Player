@@ -351,9 +351,9 @@ namespace Player.Model
                         lock (this.disposeLock)
                         {
                             this.CurrentPlaylist.AddSong(e.Song);
-                            if (CurrentPlaylist.CurrentSongIndex == 0)
+                            if (CurrentPlaylist.CurrentSongIndex == 0 && currentPlayer == null)
                             {
-                                InternSelectSong(0, false);
+                                InternSelectSong(0, true);
                             }
                         }
                     }

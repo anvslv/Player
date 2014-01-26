@@ -169,7 +169,15 @@ namespace Player.Model
 
             if (this.CurrentSongIndex.HasValue && indexList.Contains(this.CurrentSongIndex.Value))
             {
-                this.CurrentSongIndex = null;
+                var firstNextEntry = this.playlist.FirstOrDefault(x => x.Index > this.CurrentSongIndex && !indexList.Contains(x.Index));
+                if (firstNextEntry != null) {
+                    this.CurrentSongIndex = firstNextEntry.Index;
+                    
+                } else if (this.playlist.Count > 1) {
+                    this.CurrentSongIndex = 0;
+                }
+                else
+                    this.CurrentSongIndex = null;
             }
 
             this.playlist.RemoveAll(entry => indexList.Contains(entry.Index));

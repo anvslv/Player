@@ -55,8 +55,8 @@ namespace Player.Settings
                     new XElement("Playlist",
                         new XElement("Volume",
                             new XAttribute("Value", playlist.Volume)),
-                        new XElement("CurrentSongIndex",
-                            new XAttribute("Value", playlist.CurrentSongIndex ?? 0)),
+                        playlist.CurrentSongIndex != null ? new XElement("CurrentSongIndex",
+                            new XAttribute("Value", playlist.CurrentSongIndex)) : null,
                         new XElement("CurrentTime",
                             new XAttribute("Value", playlist.CurrentTime.Ticks)),
                         new XElement("Entries", playlist.Select(entry =>
@@ -109,7 +109,7 @@ namespace Player.Settings
                     float.Parse(v.Attribute("Value").Value, CultureInfo.InvariantCulture.NumberFormat))
                 .FirstOrDefault();
 
-            int currentSongIndex = playlist
+            int? currentSongIndex = playlist
                .Descendants("CurrentSongIndex")
                .Select(e =>
                    int.Parse(e.Attribute("Value").Value))
