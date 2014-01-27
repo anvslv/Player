@@ -32,7 +32,7 @@ namespace Player.Services
             menu.MenuItems.Add(item); 
             
             _trayIcon = new NotifyIcon();
-            _trayIcon.Icon = Icon.FromHandle(Resources.Icon.GetHicon());
+            _trayIcon.Icon = Icon.FromHandle(Resources.IconPng.GetHicon());
             _trayIcon.ContextMenu = menu;
             _trayIcon.Visible = true; 
         }

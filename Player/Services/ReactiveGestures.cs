@@ -7,6 +7,7 @@ namespace Player.Services
 {
     public static class ReactiveGestures
     {
+        // TODO totally not working sometimes
         public static void DoubleClick(this FrameworkElement element, ICommand action)
         { 
             var mouseDown = Observable.FromEventPattern<MouseButtonEventArgs>(element, "MouseLeftButtonDown");

@@ -13,6 +13,13 @@ namespace Player.Services
         public ResizeMode ThisResizeMode
         {
             get { return ResizeMode.CanResize; }
-        } 
+        }
+
+        private double thisWidth = 450;
+        public new double ThisWidth
+        {
+            get { return thisWidth; }
+            set { thisWidth = value; }
+        }
     }
 }

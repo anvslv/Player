@@ -17,7 +17,11 @@ namespace Player.ViewModels
         private readonly Library library;
         private readonly Timer updateTimer;
         private readonly Timer showVolumeTimer;
-       
+        private double thisWidth;
+        private Double StripeMinWidth = 300;
+        private Double ShortTimeStripeMaxWidth = 350;
+        private Double StripeMaxWidth = 700;
+
         public StripeViewModel(Library library)
         {
             this.library = library;
@@ -36,17 +40,39 @@ namespace Player.ViewModels
             this.updateTimer = new Timer(1000);
             this.updateTimer.Elapsed += (sender, e) => this.UpdateCurrentTime();
 
-            this.showVolumeTimer = new Timer(2000);
-            this.showVolumeTimer.AutoReset = false;
+            this.showVolumeTimer = new Timer(2000){ AutoReset = false }; 
             this.showVolumeTimer.Elapsed += (sender, e) => this.UpdateCurrentTime(); 
         }
 
-        private double thisWidth;
+        public bool ShowVolume
+        {
+            get { return showVolumeTimer.Enabled; }
+        }
 
-        private Double StripeMinWidth = 300;
-        private Double ShortTimeStripeMaxWidth = 350;
-        private Double StripeMaxWidth = 700;
-
+        public string VolumeInPercent
+        {
+            get
+            {
+                return string.Format("{0}%", (int)(this.Volume * 100));
+            }
+        }
+         
+        public float Volume
+        {
+            get { return this.library.Volume; }
+            set
+            {
+                this.library.Volume = value;
+                this.showVolumeTimer.Stop();
+                this.showVolumeTimer.Start();
+                this.RaisePropertyChanged(() => Volume);
+                this.RaisePropertyChanged(() => ShowVolume);
+                this.RaisePropertyChanged(() => ShowShortSongTime);
+                this.RaisePropertyChanged(() => ShowFullSongTime);
+                this.RaisePropertyChanged(() => VolumeInPercent);
+            }
+        }
+         
         public double ThisWidth
         {
             get { return thisWidth; }
@@ -57,13 +83,13 @@ namespace Player.ViewModels
                     thisWidth = value > StripeMaxWidth ? StripeMaxWidth : value;
                     thisWidth = value < StripeMinWidth ? StripeMinWidth : value;
 
-                    RaisePropertyChanged(() => ThisWidth);
-                    RaisePropertyChanged(() => RightBlock);
+                    RaisePropertyChanged(() => ShowFullSongTime);
+                    RaisePropertyChanged(() => ShowShortSongTime);
+                    RaisePropertyChanged(() => ThisWidth); 
                 }
             }
         }
-
-
+         
         public int CurrentSeconds
         {
             get { return (int)this.CurrentTime.TotalSeconds; }
@@ -104,6 +130,14 @@ namespace Player.ViewModels
             }
         }
 
+        public bool ShowFullSongTime
+        {
+            get
+            {
+                return thisWidth > ShortTimeStripeMaxWidth && !ShowVolume;
+            }
+        }
+        
         public string Time
         {
             get
@@ -117,6 +151,14 @@ namespace Player.ViewModels
             }
         }
 
+        public bool ShowShortSongTime
+        {
+            get
+            {
+                return thisWidth <= ShortTimeStripeMaxWidth && !ShowVolume;
+            }
+        }
+
         public string ShortTime
         {
             get
@@ -126,18 +168,8 @@ namespace Player.ViewModels
                 return string.Empty;
             }
         }
-
-        public string RightBlock
-        {
-            get
-            {
-                if (showVolumeTimer.Enabled)
-                    return string.Format("{0}%", (int)(this.Volume * 100));
-                if (thisWidth > ShortTimeStripeMaxWidth) 
-                    return Time;
-                return ShortTime;
-            }
-        }
+         
+     
 
         public string LeftBlock
         {
@@ -148,20 +180,9 @@ namespace Player.ViewModels
                 return Resources.DropHere; 
             }
         }
-
-        public float Volume
-        {
-            get { return this.library.Volume; }
-            set
-            {
-                this.library.Volume = (float)value;
-                this.RaisePropertyChanged(() => this.Volume);
-                this.showVolumeTimer.Start();
-            }
-        }
-
+          
         #region Commands
-
+  
         public ICommand IncreaseVolume
         {
             get
@@ -170,8 +191,8 @@ namespace Player.ViewModels
                 (
                     () =>
                     {
-                        this.Volume = ChangeVolume(0.05f);
-                    } 
+                        this.Volume = NormalizeVolume(0.05f);
+                    }
                 );
             }
         }
@@ -184,12 +205,12 @@ namespace Player.ViewModels
                 (
                     () =>
                     {
-                        this.Volume = ChangeVolume(-0.05f);
+                        this.Volume = NormalizeVolume(-0.05f);
                     }
                 );
             }
         }
-          
+         
         public ICommand PauseCommand
         {
             get
@@ -301,19 +322,19 @@ namespace Player.ViewModels
         { 
             this.updateTimer.Dispose();
         }
-
-        private float ChangeVolume(float delta)
+         
+        private void HandleSongCorrupted()
+        {
+            this.RaisePropertyChanged(() => this.IsPlaying);
+            this.RaisePropertyChanged(() => this.SongLoaded);
+        }
+         
+        private float NormalizeVolume(float delta)
         {
             var newone = this.Volume += delta;
             if (newone > 1.0f) return 1.0f;
             if (newone < 0f) return 0f;
             return newone;
-        }
-          
-        private void HandleSongCorrupted()
-        {
-            this.RaisePropertyChanged(() => this.IsPlaying);
-            this.RaisePropertyChanged(() => this.SongLoaded);
         }
 
         private void HandleSongFinished()
@@ -349,18 +370,20 @@ namespace Player.ViewModels
             this.RaisePropertyChanged(() => this.Title);
             this.RaisePropertyChanged(() => this.Time);
 
-            this.RaisePropertyChanged(() => this.LeftBlock);
-            this.RaisePropertyChanged(() => this.RightBlock);
+            this.RaisePropertyChanged(() => this.LeftBlock); 
         }
 
         private void UpdateCurrentTime()
         {
+            this.RaisePropertyChanged(() => this.ShowVolume);
+            this.RaisePropertyChanged(() => this.ShowFullSongTime);
+            this.RaisePropertyChanged(() => this.ShowShortSongTime);
+
             this.RaisePropertyChanged(() => this.TotalSeconds);
             this.RaisePropertyChanged(() => this.CurrentSeconds);
-            
-            this.RaisePropertyChanged(() => this.Time);
 
-            this.RaisePropertyChanged(() => this.RightBlock);
-        } 
+            this.RaisePropertyChanged(() => this.ShortTime);
+            this.RaisePropertyChanged(() => this.Time);
+        }  
     }
 }
