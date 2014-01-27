@@ -5,23 +5,25 @@ using System.Windows.Input;
 
 namespace Player.Services
 {
-    public static class ReactiveGestures
+    public static class Gestures
     {
-        // TODO totally not working sometimes
         public static void DoubleClick(this FrameworkElement element, ICommand action)
         { 
+            element.InputBindings.Add(new MouseBinding(action, new MouseGesture(MouseAction.LeftDoubleClick))); 
+        }
+
+        // TODO totally not working sometimes
+        public static void ReactiveDoubleClick(this FrameworkElement element, ICommand action)
+        {
             var mouseDown = Observable.FromEventPattern<MouseButtonEventArgs>(element, "MouseLeftButtonDown");
             mouseDown.BufferWithTimeAndCount(TimeSpan.FromMilliseconds(300.0), 2).Subscribe(a =>
             {
                 if (action.CanExecute(null))
                     action.Execute(null);
             });
-        }
-
-        public static void DoubleClick(this FrameworkElement element, ICommand action)
-        {
             element.InputBindings.Add(new MouseBinding(action, new MouseGesture(MouseAction.LeftDoubleClick)));
-        }
+
+        } 
 
         private static IObservable<T> BufferWithTimeAndCount<T>(this IObservable<T> src, TimeSpan t, int count)
         {

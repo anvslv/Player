@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WixLocalization Culture="ru-ru" Codepage="1251" Language="1049" xmlns="http://schemas.microsoft.com/wix/2006/localization">
+  <String Id="Name">Player</String>
+  <String Id="Manufacturer">Andrei Vasilev</String>
+  <String Id="DowngradeErrorMessage">Newer Version already installed</String>
+</WixLocalization>

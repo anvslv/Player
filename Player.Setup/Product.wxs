@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*"
+           Name="!(loc.Name)"
+           Codepage="1251"
+           Language="1049" 
+           Version="0.0.1.0"  
+           Manufacturer=" !(loc.Manufacturer)"
+           UpgradeCode="4dcc4cf9-cade-45e5-91b1-cbe62d984bfd">
+		
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perUser" />
+
+    <Icon Id="Icon.ico" SourceFile="Resource\Icon.ico"/>
+    <Property Id="ARPPRODUCTICON" Value="Icon.ico" />
+     
+    <MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeErrorMessage)" />
+
+    <MediaTemplate />
+
+		<Feature Id="ProductFeature" Title="Player.Setup" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+		</Feature>
+
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    <UIRef Id="WixUI_InstallDir" />
+    
+	</Product>
+
+	<Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="AppDataFolder">
+        <Directory Id="INSTALLFOLDER" Name="Minerva" /> 
+      </Directory>
+    </Directory>
+    
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+
+      <Component Id="PlayerExe" Guid="{EFC3B471-1EE3-4174-B877-3FBC68B351FD}">
+            <CreateFolder />
+            <RemoveFolder Id="PlayerDir" On="uninstall" />
+
+            <RegistryKey Root="HKCU" Key="Software\Anvslv\Player">
+              <RegistryValue Name="Player.Executable" Value="1" KeyPath="yes" Type="integer" />
+            </RegistryKey>
+        
+            <File Id="Player.Executable"
+                  Name="Player.exe"
+                  Source="$(var.Player.TargetDir)\Player.exe"
+                  DiskId="1" Checksum="yes"/>
+      </Component>
+
+      <Component Id="SystemReactiveCoreDependency" Guid="{5EED9B90-111F-4123-A932-79783A94A1D5}">
+        <RegistryKey Root="HKCU" Key="Software\Anvslv\Player">
+          <RegistryValue Name="System.Reactive.Core.Dependency" Value="1" KeyPath="yes" Type="integer" />
+        </RegistryKey>
+        
+        <File Id="System.Reactive.Core.Dependency"
+              Name="System.Reactive.Core.dll"
+              Source="$(var.Player.TargetDir)\System.Reactive.Core.dll"
+              DiskId="1" Checksum="yes" />
+      </Component>
+
+      <Component Id="SystemReactiveLinqDependency" Guid="{643E46DB-1CFD-46C7-A4DC-9C763016103D}">
+        <RegistryKey Root="HKCU" Key="Software\Anvslv\Player">
+          <RegistryValue Name="System.Reactive.Linq.Dependency" Value="1" KeyPath="yes" Type="integer" />
+        </RegistryKey>
+        
+        <File Id="System.Reactive.Linq.Dependency"
+              Name="System.Reactive.Linq.dll"
+              Source="$(var.Player.TargetDir)\System.Reactive.Linq.dll"
+              DiskId="1" Checksum="yes" />
+      </Component>
+
+      <Component Id="SystemReactiveInterfacesDependency" Guid="{D2FFCED4-5A69-4429-86B9-6348FC14D182}">
+        <RegistryKey Root="HKCU" Key="Software\Anvslv\Player">
+          <RegistryValue Name="System.Reactive.Interfaces.Dependency" Value="1" KeyPath="yes" Type="integer" />
+        </RegistryKey>
+        
+        <File Id="System.Reactive.Interfaces.Dependency"
+              Name="System.Reactive.Interfaces.dll"
+              Source="$(var.Player.TargetDir)\System.Reactive.Interfaces.dll"
+              DiskId="1" Checksum="yes" />
+      </Component>
+
+      <Component Id="SharpCompressDependency" Guid="{526677A4-489D-4ABF-AE77-00970D7992B0}">
+        <RegistryKey Root="HKCU" Key="Software\Anvslv\Player">
+          <RegistryValue Name="SharpCompress.Dependency" Value="1" KeyPath="yes" Type="integer" />
+        </RegistryKey>
+        
+        <File Id="SharpCompress.Dependency"
+              Name=" SharpCompress.dll"
+              Source="$(var.Player.TargetDir)\SharpCompress.dll"
+              DiskId="1" Checksum="yes"/>
+      </Component>
+
+      <Component Id="taglibsharpDependency" Guid="{3A3BF6BE-0C58-42AB-AF45-FF22F6823C40}">
+        <RegistryKey Root="HKCU" Key="Software\Anvslv\Player">
+          <RegistryValue Name="taglibsharp.Dependency" Value="1" KeyPath="yes" Type="integer" />
+        </RegistryKey>
+        
+        <File Id="taglibsharp.Dependency"
+              Name="taglib-sharp.dll"
+              Source="$(var.Player.TargetDir)\taglib-sharp.dll"
+              DiskId="1" Checksum="yes" />
+      </Component>
+
+      <Component Id="policyTaglibsharpDependency" Guid="{0159F4C3-9E8C-4B1F-ABE2-7E9032634BFB}">
+        <RegistryKey Root="HKCU" Key="Software\Anvslv\Player">
+          <RegistryValue Name="policy.taglibsharp.Dependency" Value="1" KeyPath="yes" Type="integer" />
+        </RegistryKey>
+        
+        <File Id="policy.taglibsharp.Dependency"
+              Name="policy.taglib-sharp.dll"
+              Source="$(var.Player.TargetDir)\policy.2.0.taglib-sharp.dll"
+             DiskId="1" Checksum="yes"/>
+      </Component>
+
+      <Component Id="NAudioDependency" Guid="{E5176143-EDD7-4AB6-9EFC-7E633017A1A0}">
+        <RegistryKey Root="HKCU" Key="Software\Anvslv\Player">
+          <RegistryValue Name="NAudio.Dependency" Value="1" KeyPath="yes" Type="integer" />
+        </RegistryKey>
+        
+        <File Id="NAudio.Dependency"
+              Name="NAudio.dll"
+              Source="$(var.Player.TargetDir)\NAudio.dll"
+              DiskId="1" Checksum="yes" />
+      </Component>
+        
+    </ComponentGroup>
+	</Fragment>
+</Wix>

@@ -11,8 +11,7 @@ using SharpCompress.Common;
 namespace Player.IO
 {
     public class FileScanner : DirectoryScanner
-    { 
-        private volatile bool isStopped;
+    {  
         private string[] supportedExtensions =
         {
             ".rar",
