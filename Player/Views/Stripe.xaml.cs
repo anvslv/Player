@@ -81,7 +81,7 @@ namespace Player.Views
        
         private void WireCommands()
         { 
-            this.Draggable.InputBindings.Add(new MouseBinding(viewModel.PauseContinueCommand, new MouseGesture(MouseAction.LeftDoubleClick)));
+            this.Draggable.DoubleClick(viewModel.PauseContinueCommand);
             this.RightButtonDragLeft(viewModel.PreviousSongCommand);
             this.RightButtonDragRight( viewModel.NextSongCommand);
             this.RightButtonDragDown( viewModel.ShowHidePlaylist);

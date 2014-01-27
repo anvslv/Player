@@ -18,6 +18,11 @@ namespace Player.Services
             });
         }
 
+        public static void DoubleClick(this FrameworkElement element, ICommand action)
+        {
+            element.InputBindings.Add(new MouseBinding(action, new MouseGesture(MouseAction.LeftDoubleClick)));
+        }
+
         private static IObservable<T> BufferWithTimeAndCount<T>(this IObservable<T> src, TimeSpan t, int count)
         {
             return src.Timestamp()
