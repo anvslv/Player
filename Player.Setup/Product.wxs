@@ -28,6 +28,8 @@
 
 	<Fragment>
     <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="DesktopFolder" SourceName="Desktop" />
+
       <Directory Id="AppDataFolder">
         <Directory Id="INSTALLFOLDER" Name="Minerva" /> 
       </Directory>
@@ -39,17 +41,23 @@
 		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
 
       <Component Id="PlayerExe" Guid="{EFC3B471-1EE3-4174-B877-3FBC68B351FD}">
-            <CreateFolder />
-            <RemoveFolder Id="PlayerDir" On="uninstall" />
+        <CreateFolder />
+        <RemoveFolder Id="PlayerDir" On="uninstall" />
 
-            <RegistryKey Root="HKCU" Key="Software\Anvslv\Player">
-              <RegistryValue Name="Player.Executable" Value="1" KeyPath="yes" Type="integer" />
-            </RegistryKey>
-        
-            <File Id="Player.Executable"
-                  Name="Player.exe"
-                  Source="$(var.Player.TargetDir)\Player.exe"
-                  DiskId="1" Checksum="yes"/>
+        <RegistryKey Root="HKCU" Key="Software\Anvslv\Player">
+          <RegistryValue Name="Player.Executable" Value="1" KeyPath="yes" Type="integer" />
+        </RegistryKey>
+
+        <File Id="Player.Executable"
+              Name="Player.exe"
+              Source="$(var.Player.TargetDir)\Player.exe"
+              DiskId="1" Checksum="yes">
+          <Shortcut
+             Id="DesktopShortcut"
+             Directory="DesktopFolder"
+             Name="Minerva"
+             WorkingDirectory="INSTALLFOLDER" />
+        </File>
       </Component>
 
       <Component Id="SystemReactiveCoreDependency" Guid="{5EED9B90-111F-4123-A932-79783A94A1D5}">

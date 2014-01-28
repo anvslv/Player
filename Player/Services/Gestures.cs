@@ -6,7 +6,24 @@ using System.Windows.Input;
 namespace Player.Services
 {
     public static class Gestures
-    {
+    { 
+        public static void PlayPause(this FrameworkElement element, ICommand action)
+        {
+            element.InputBindings.Add(new KeyBinding(action, new KeyGesture(Key.MediaPlayPause)));
+            element.InputBindings.Add(new KeyBinding(action, new KeyGesture(Key.Pause)));
+            element.InputBindings.Add(new KeyBinding(action, new KeyGesture(Key.Play)));
+        }
+
+        public static void NextTrack(this FrameworkElement element, ICommand action)
+        {
+            element.InputBindings.Add(new KeyBinding(action, new KeyGesture(Key.MediaNextTrack)));
+        }
+
+        public static void PreviousTrack(this FrameworkElement element, ICommand action)
+        {
+            element.InputBindings.Add(new KeyBinding(action, new KeyGesture(Key.MediaPreviousTrack)));
+        }
+
         public static void DoubleClick(this FrameworkElement element, ICommand action)
         { 
             element.InputBindings.Add(new MouseBinding(action, new MouseGesture(MouseAction.LeftDoubleClick))); 

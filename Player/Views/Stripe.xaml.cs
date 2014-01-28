@@ -17,25 +17,26 @@ namespace Player.Views
         public Stripe()
         { 
             InitializeComponent();
-            Draggable.MouseLeftButtonDown += DraggableOnMouseLeftButtonDown;
-            Draggable.MouseLeftButtonUp += DraggableOnMouseLeftButtonUp; 
-            Drop += OnDrop;
-            Closing += OnClosing;
+             
+            this.Draggable.MouseLeftButtonDown += DraggableOnMouseLeftButtonDown;
+            this.Draggable.MouseLeftButtonUp += DraggableOnMouseLeftButtonUp; 
+            this.Drop += OnDrop;
+            this.Closing += OnClosing;
             
             this.Grip.PreviewMouseLeftButtonDown += GripOnMouseDown;
             this.Grip.PreviewMouseLeftButtonUp += GripOnMouseUp;
             this.Grip.PreviewMouseMove += GripOnMouseMove;
 
             if (DesignerProperties.GetIsInDesignMode(this))
-                DataContext = new DesignTimeStripeViewModel();
+                this.DataContext = new DesignTimeStripeViewModel();
             else
             {
-                viewModel = new StripeViewModel(LibraryManager.Instance());
-                DataContext = viewModel;
+                this.viewModel = new StripeViewModel(LibraryManager.Instance());
+                this.DataContext = viewModel;
             }
 
             WireCommands();
-        }
+        } 
 
         bool isResizing = false;
         Point startPt;
@@ -87,6 +88,10 @@ namespace Player.Views
             this.RightButtonDragDown( viewModel.ShowHidePlaylist);
             this.ScrollDown (viewModel.DecreaseVolume);
             this.ScrollUp(viewModel.IncreaseVolume);
+
+            this.PlayPause(viewModel.PauseContinueCommand);
+            this.NextTrack(viewModel.NextSongCommand);
+            this.PreviousTrack(viewModel.PreviousSongCommand);
         }
 
         private void OnClosing(object sender, CancelEventArgs cancelEventArgs)
