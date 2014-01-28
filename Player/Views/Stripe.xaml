@@ -22,6 +22,7 @@
             Visibility="{Binding SongLoaded, 
                 Converter={StaticResource BooleanToVisibilityConverter}}"
             Name="CusomSlider" 
+            FocusVisualStyle="{x:Null}"
             Style="{StaticResource MyCustomStyleForSlider}" 
             VerticalAlignment="Top"
             IsMoveToPointEnabled="True"
