@@ -60,11 +60,22 @@
         </File>
       </Component>
 
+      <Component Id="PlayerExeConfigDependency" Guid="{AE7CA65B-BBF5-4C92-954E-6362CD2FE2C9}">
+        <RegistryKey Root="HKCU" Key="Software\Anvslv\Player">
+          <RegistryValue Name="Player.exe.config.Dependency" Value="1" KeyPath="yes" Type="integer" />
+        </RegistryKey>
+
+        <File Id="Player.exe.config.Dependency"
+              Name="Player.exe.config"
+              Source="$(var.Player.TargetDir)\Player.exe.config"
+              DiskId="1" Checksum="yes" />
+      </Component>
+
       <Component Id="SystemReactiveCoreDependency" Guid="{5EED9B90-111F-4123-A932-79783A94A1D5}">
         <RegistryKey Root="HKCU" Key="Software\Anvslv\Player">
           <RegistryValue Name="System.Reactive.Core.Dependency" Value="1" KeyPath="yes" Type="integer" />
         </RegistryKey>
-        
+
         <File Id="System.Reactive.Core.Dependency"
               Name="System.Reactive.Core.dll"
               Source="$(var.Player.TargetDir)\System.Reactive.Core.dll"

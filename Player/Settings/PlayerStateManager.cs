@@ -113,7 +113,7 @@ namespace Player.Settings
                .Descendants("CurrentSongIndex")
                .Select(e =>
                    int.Parse(e.Attribute("Value").Value))
-               .FirstOrDefault();
+               .Cast<int?>().FirstOrDefault();
              
             TimeSpan currentTime = playlist
                 .Descendants("CurrentTime")

@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel;
 using System.Configuration;
 using System.Globalization;
+using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
@@ -20,16 +21,15 @@ namespace Player.Services
         public abstract ResizeMode GetResizeMode();
 
         protected BaseWindow()
-        {
-            Loaded += OnLoaded; 
-            Closing += OnClosing;
-            Tray.Instance.AddMouseDoubleClick(TrayIconMouseDoubleClick);
-
-            var culture = new CultureInfo(ConfigurationManager.AppSettings["DefaultCulture"]);
+        { 
+            var culture = new CultureInfo("ru-RU");
             Thread.CurrentThread.CurrentCulture = culture;
             Thread.CurrentThread.CurrentUICulture = culture;
             this.Language = XmlLanguage.GetLanguage(culture.IetfLanguageTag);
 
+            Loaded += OnLoaded;
+            Closing += OnClosing;
+            Tray.Instance.AddMouseDoubleClick(TrayIconMouseDoubleClick);
         }
          
         public void Dispose()

@@ -167,9 +167,7 @@ namespace Player.ViewModels
                     return string.Format("{0}", this.CurrentTime.ToMinutesAndSeconds());
                 return string.Empty;
             }
-        }
-         
-     
+        } 
 
         public string LeftBlock
         {

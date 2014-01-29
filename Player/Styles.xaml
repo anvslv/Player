@@ -115,7 +115,7 @@
     <system:Double x:Key="SongsMinHeight">100</system:Double>
     <system:Double x:Key="SongsMaxHeight">1000</system:Double>
 
-    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" /> 
     <converters:IsPlayingToForegroundConverter x:Key="IsPlayingToForegroundConverter" />
     <converters:PlaylistEntryLeftPartWidthConverter x:Key="PlaylistEntryLeftPartWidthConverter" /> 
 
