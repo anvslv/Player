@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using System.Xml;
 
@@ -22,7 +23,15 @@ namespace Player.Core
                 buffer.Append(XmlConvert.IsXmlChar(c) ? c : '_');
             }
 
-            return buffer.ToString();
+            return toUtf8(buffer.ToString());
         }
+
+        // http://www.cyberforum.ru/csharp-net/thread356693.html
+        public static string toUtf8(string unknown)
+        {
+            return new string(unknown.ToCharArray().
+                Select(x => ((x + 848) >= 'А' && (x + 848) <= 'ё') ? (char)(x + 848) : x).
+                ToArray());
+        } 
     }
 }
