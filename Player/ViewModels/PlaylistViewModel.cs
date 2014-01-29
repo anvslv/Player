@@ -31,7 +31,7 @@ namespace Player.ViewModels
                 
                 var songs = library.CurrentPlaylist.Select(entry => new PlaylistEntryViewModel(entry, count)).ToList();
 
-                if (this.library.CurrentPlaylist.CurrentSongIndex.HasValue)
+                if (this.library.CurrentPlaylist.CurrentSongIndex.HasValue && songs.Count > 0)
                 {
                     PlaylistEntryViewModel entry = songs[this.library.CurrentPlaylist.CurrentSongIndex.Value];
 

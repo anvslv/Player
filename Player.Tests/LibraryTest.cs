@@ -285,7 +285,7 @@ namespace Player.Tests
         }
 
         [Fact]
-        public void RemoveFromPlaylist_SongIsPlaying_CurrentPlayerIsStopped()
+        public void RemoveFromPlaylist_SongIsPlaying_CurrentPlayerIsNotStopped()
         {
             var audioPlayerMock = new Mock<AudioPlayer>();
 
@@ -300,7 +300,7 @@ namespace Player.Tests
 
                 library.RemoveFromPlaylist(new[] { 0 });
 
-                audioPlayerMock.Verify(p => p.Stop(), Times.Once());
+                audioPlayerMock.Verify(p => p.Stop(), Times.Never);
             }
         }
 

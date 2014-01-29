@@ -173,7 +173,7 @@ namespace Player.Model
                 if (firstNextEntry != null) {
                     this.CurrentSongIndex = firstNextEntry.Index;
                     
-                } else if (this.playlist.Count > 1) {
+                } else if (this.playlist.Count - indexList.Count > 0) {
                     this.CurrentSongIndex = 0;
                 }
                 else

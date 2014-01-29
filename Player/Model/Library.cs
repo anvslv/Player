@@ -217,7 +217,8 @@ namespace Player.Model
          
         private void Save()
         {
-            this.CurrentPlaylist.CurrentTime = currentPlayer.CurrentTime;
+            if(currentPlayer != null)
+                this.CurrentPlaylist.CurrentTime = currentPlayer.CurrentTime;
             this.playerStateManager.Save(this.CurrentPlaylist);
         }
 

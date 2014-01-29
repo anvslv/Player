@@ -2,8 +2,12 @@
 
 using System;
 using System.ComponentModel;
+using System.Configuration;
+using System.Globalization;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Markup;
 using Blue.Private.Win32Imports;
 using Blue.Windows; 
 using Player.Settings;
@@ -19,7 +23,13 @@ namespace Player.Services
         {
             Loaded += OnLoaded; 
             Closing += OnClosing;
-            Tray.Instance.AddMouseDoubleClick(TrayIconMouseDoubleClick); 
+            Tray.Instance.AddMouseDoubleClick(TrayIconMouseDoubleClick);
+
+            var culture = new CultureInfo(ConfigurationManager.AppSettings["DefaultCulture"]);
+            Thread.CurrentThread.CurrentCulture = culture;
+            Thread.CurrentThread.CurrentUICulture = culture;
+            this.Language = XmlLanguage.GetLanguage(culture.IetfLanguageTag);
+
         }
          
         public void Dispose()

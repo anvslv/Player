@@ -51,7 +51,7 @@ namespace Player.Tests
 
             playlist.CurrentSongIndex = 3;
 
-            Assert.False(playlist.CanPlayNextSong);
+            Assert.True(playlist.CanPlayNextSong);
         }
 
         [Fact]
@@ -114,7 +114,7 @@ namespace Player.Tests
 
             playlist.CurrentSongIndex = 0;
 
-            Assert.False(playlist.CanPlayPreviousSong);
+            Assert.True(playlist.CanPlayPreviousSong);
         }
 
         [Fact]

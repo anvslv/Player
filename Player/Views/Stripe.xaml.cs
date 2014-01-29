@@ -46,9 +46,7 @@ namespace Player.Views
             get { return viewModel.ThisWidth; }
             set
             {
-                viewModel.ThisWidth = value;
-                Debug.WriteLine(Width);
-                Debug.WriteLine(ThisWidth);
+                viewModel.ThisWidth = value; 
             }
         }
 
@@ -84,7 +82,7 @@ namespace Player.Views
         { 
             this.Draggable.DoubleClick(viewModel.PauseContinueCommand);
             this.RightButtonDragLeft(viewModel.PreviousSongCommand);
-            this.RightButtonDragRight( viewModel.NextSongCommand);
+            this.RightButtonDragRight(viewModel.NextSongCommand);
             this.RightButtonDragDown( viewModel.ShowHidePlaylist);
             this.ScrollDown (viewModel.DecreaseVolume);
             this.ScrollUp(viewModel.IncreaseVolume);

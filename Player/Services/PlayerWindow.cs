@@ -17,7 +17,7 @@ namespace Player.Services
                 Width = 400,
                 Height = 100,
                 Top = 0,
-                Left = 0,
+                Left = System.Windows.SystemParameters.WorkArea.Width - 500,
                 IsVisible = true
             };
         }
@@ -30,7 +30,7 @@ namespace Player.Services
                 Width = 400,
                 Height = 400,
                 Top = 24,
-                Left = 0,
+                Left = System.Windows.SystemParameters.WorkArea.Width - 500,
                 IsVisible = true
             };
         }

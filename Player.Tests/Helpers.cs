@@ -71,8 +71,7 @@ namespace Player.Tests
             return "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
                     "<Root>" +
                     "  <Playlist>" +
-                    "    <Volume Value=\"0.5\" />" +
-                    "    <CurrentSongIndex Value=\"0\" />" +
+                    "    <Volume Value=\"0.5\" />" + 
                     "    <CurrentTime Value=\"0\" />" +
                     "    <Entries>" +
                     "      <Entry FilePath=\"Path1\" Album=\"Album1\" Artist=\"Artist1\" Title=\"Title1\" Year=\"2005\" TrackNumber=\"1\" Duration=\"1\" />" +
