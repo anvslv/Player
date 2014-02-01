@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Player.Core;
-using Player.IO;
+using Player.Model;
 
-namespace Player.Model
+namespace Player.IO
 {
     internal sealed class SongFinder 
     {

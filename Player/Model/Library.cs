@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Player.Audio;
 using Player.Core;
+using Player.IO;
 using Player.Settings;
 
 namespace Player.Model

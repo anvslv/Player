@@ -23,5 +23,15 @@ namespace Player.Tests
         {
             Assert.Throws<ArgumentNullException>(() => TagSanitizer.Sanitize(null));
         }
+
+        [Fact]
+        public void Sanitize_TagIsCyrillic_ReturnsCorrectResult()
+        {
+            const string tag = "Æèâ¸ì";
+
+            string sanitized = TagSanitizer.Sanitize(tag);
+
+            Assert.Equal("Живём", sanitized);
+        } 
     }
 }

@@ -20,18 +20,35 @@ namespace Player.Core
 
             foreach (char c in tag)
             {
-                buffer.Append(XmlConvert.IsXmlChar(c) ? c : '_');
+                buffer.Append(XmlConvert.IsXmlChar(c) ? c.ToUtf8() : '_');
             }
 
-            return ToUtf8(buffer.ToString());
+            return buffer.ToString();
         }
 
         // http://www.cyberforum.ru/csharp-net/thread356693.html
-        public static string ToUtf8(string unknown)
+        public static char ToUtf8(this char x)
         {
-            return new string(unknown.ToCharArray().
-                Select(x => ((x + 848) >= 'А' && (x + 848) <= 'ё') ? (char)(x + 848) : x).
-                ToArray());
+            char result;
+            switch (x + 848)
+            {
+                //case 1025:
+                case 952: 
+                    result = 'Ё';
+                    break;
+                //case 1105:
+                case 1032:
+                    result = 'ё'; 
+                    break; 
+                default:
+                    if ((x + 848) >= 'А' && (x + 848) <= 'ё')
+                        result = (char) (x + 848);
+                    else 
+                        result = x;
+                    break;
+            }
+
+            return result;
         } 
     }
-}
+} 

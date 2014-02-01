@@ -44,8 +44,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NAudio.1.7\lib\net35\NAudio.dll</HintPath>
     </Reference>
-    <Reference Include="policy.2.0.taglib-sharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="policy.2.0.taglib-sharp">
       <HintPath>..\..\packages\taglib.2.1.0.0\lib\policy.2.0.taglib-sharp.dll</HintPath>
     </Reference>
     <Reference Include="SharpCompress">
@@ -74,8 +73,7 @@
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="taglib-sharp, Version=2.1.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="taglib-sharp">
       <HintPath>..\..\packages\taglib.2.1.0.0\lib\taglib-sharp.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
@@ -87,6 +85,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Audio\AudioPlayer.cs" />
     <Compile Include="Audio\AudioPlayerState.cs" />
     <Compile Include="Audio\LocalAudioPlayer.cs" />
     <Compile Include="IO\DirectoryEventArgs.cs" />
@@ -100,9 +99,11 @@
     <Compile Include="MicroMvvm\ObservableObject.cs" />
     <Compile Include="MicroMvvm\PropertySupport.cs" />
     <Compile Include="MicroMvvm\RelayCommand.cs" />
+    <Compile Include="Model\Class1.cs" />
     <Compile Include="Model\Library.cs" />
     <Compile Include="Audio\PlaybackException.cs" />
     <Compile Include="Audio\SongLoadException.cs" />
+    <Compile Include="Model\LocalSong.cs" />
     <Compile Include="Resources.ru.Designer.cs">
       <DependentUpon>Resources.ru.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -124,7 +125,7 @@
     <Compile Include="Model\Playlist.cs" />
     <Compile Include="Model\PlaylistEntry.cs" />
     <Compile Include="Model\Song.cs" />
-    <Compile Include="Model\SongFinder.cs" />
+    <Compile Include="IO\SongFinder.cs" />
     <Compile Include="Services\Serialization.cs" />
     <Compile Include="Settings\SettingsPath.cs" />
     <Compile Include="Settings\State.cs" />

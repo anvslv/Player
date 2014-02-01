@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System; 
 using System.IO;
 using System.Linq;
-using System.Security;
-using System.Security.Policy;
-using Player.Core;
+using System.Security; 
 using SharpCompress.Archive;
 using SharpCompress.Common;
 
