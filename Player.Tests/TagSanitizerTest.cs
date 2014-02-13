@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using Player.Core;
@@ -25,13 +26,42 @@ namespace Player.Tests
         }
 
         [Fact]
-        public void Sanitize_TagIsCyrillic_ReturnsCorrectResult()
+        public void Sanitize_TagIsEnglish_ReturnsCorrectResult()
         {
-            const string tag = "Æèâ¸ì";
+            const string tag = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
             string sanitized = TagSanitizer.Sanitize(tag);
 
-            Assert.Equal("Живём", sanitized);
-        } 
+            Assert.Equal("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", sanitized);
+        }
+         
+        [Fact]
+        public void Sanitize_TagIsCyrillicNonUnicode_ReturnsCorrectResult()
+        {
+            const string tag = "Ð¸";
+
+            string sanitized = TagSanitizer.Sanitize(tag);
+
+            Assert.Equal("Ёё", sanitized);
+        }
+
+        [Fact]
+        public void Sanitize_TagIsCyrillicUnicode_ReturnsCorrectResult()
+        {
+            const string tag = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЙЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя";
+
+            string sanitized = TagSanitizer.Sanitize(tag);
+
+            Assert.Equal("АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЙЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя", sanitized);
+        }
+
+        [Fact]
+        public void PrintChars()
+        {
+            for (int i = 0; i < 1300; i++)
+            {
+                Debug.WriteLine("{0}: {1}", i, (char) i);
+            }
+        }
     }
 }

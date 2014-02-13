@@ -25,18 +25,12 @@ namespace Player.Core
 
             return buffer.ToString();
         }
-
-        // http://www.cyberforum.ru/csharp-net/thread356693.html
+         
         public static char ToUtf8(this char x)
         {
             char result;
             switch (x + 848)
-            {
-                //case 1025:
-                case 952: 
-                    result = 'Ё';
-                    break;
-                //case 1105:
+            { 
                 case 1032:
                     result = 'ё'; 
                     break; 
