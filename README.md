@@ -4,7 +4,7 @@ This one has the same features, but periodic crashes because of foobar outdated 
 Plus, `foo_ui_gfx` is no longer updated. The core is a fork 
 [Espera][2] by flagbug.
 
-![Player](http://site-8.apphb.com/images/player-thumb.png "Player")
+![Player](https://anvs.lv/images/player-thumb.png "Player")
 
 Files are added by dragging to the stripe, folders and archives (zip, rar) are also supported.
 Both playlist and stripe window are sticky thanks to [StickyWindow][3] library.
