@@ -4,8 +4,10 @@ This one has the same features, but periodic crashes because of foobar outdated 
 Plus, `foo_ui_gfx` is no longer updated. The core is a fork 
 [Espera][2] by flagbug.
 
-![Player](https://anvs.lv/images/player-thumb.png "Player")
+[![Player](https://anvs.lv/images/player-thumb.png "Player")](https://anvs.lv/images/player.png) [![Drag-n-drop](https://anvs.lv/images/player-drophere-thumb-en.png "Drag-n-drop")](https://anvs.lv/images/player-drophere-en.png) 
 
+[![Tray](https://anvs.lv/images/player-tray-thumb-en.png "Tray")](https://anvs.lv/images/player-tray-en.png) [![Stripe](https://anvs.lv/images/player-stripe-thumb.png "Stripe")](https://anvs.lv/images/player-stripe.png)
+  
 Files are added by dragging to the stripe, folders and archives (zip, rar) are also supported.
 Both playlist and stripe window are sticky thanks to [StickyWindow][3] library.
 Dragging the stripe moves it, resizing is performed by dragging the right edge.
