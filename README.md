@@ -25,3 +25,11 @@ Features:
 [1]: http://ilyabirman.ru/meanwhile/tags/music-player/
 [2]: https://github.com/flagbug/Espera/tree/master
 [3]: http://programminghacks.net/2009/10/19/download-snapping-sticky-magnetic-windows-for-wpf/
+
+# Build dependancies
+* Net Framework 4.8
+* Installer build dependencies
+    * WiX Toolset build tools (https://github.com/wixtoolset/wix3/releases/tag/wix3112rtm)
+    * WiX Toolset Visual Studio Extension (https://wixtoolset.org/releases/)
+
+
