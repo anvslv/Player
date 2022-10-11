@@ -19,7 +19,7 @@ using System.Windows;
     ResourceDictionaryLocation.SourceAssembly 
 )]
 
-[assembly: AssemblyVersion("0.0.1.*")] 
+[assembly: AssemblyVersion("0.0.2.*")] 
 
 [assembly: InternalsVisibleTo("Player.Tests")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")] // Moq

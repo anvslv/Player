@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?ifndef Version?>
-<?define Version = "0.0.1.0" ?>
+<?define Version = "0.0.2.0" ?>
 <?endif ?>
- 
+
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Bundle Name="Minerva" 
-        UpgradeCode="0a2c8b37-d28c-49eb-b18a-e08270858390" 
+	<Bundle Name="Minerva"
+        UpgradeCode="0a2c8b37-d28c-49eb-b18a-e08270858390"
         Version="$(var.Version)"
-        Manufacturer="Andrei Vasilev" 
-        HelpUrl="http://www.anvslv.me"
+        Manufacturer="Andrei Vasilev"
+        HelpUrl="http://www.anvs.lv"
         Copyright="Andrei Vasilev"
         IconSourceFile="Resource\Icon.ico"
         AboutUrl="http://www.anvslv.me"
         Condition="((VersionNT >= v5.1) AND (ServicePackLevel >= 3)) OR ((VersionNT >= v5.2) AND (ServicePackLevel >= 2)) OR (VersionNT >= v6.0)" >
-		
-    <BootstrapperApplicationRef Id="ManagedBootstrapperApplicationHost">
-      <Payload SourceFile="$(var.Player.Installer.TargetDir)\BootstrapperCore.config"/>
-      <Payload SourceFile="$(var.Player.Installer.TargetDir)\Player.Installer.dll"/>
-    </BootstrapperApplicationRef>
-    
-    <Chain>
-      <PackageGroupRef Id="NetFx45Redist" />
 
-      <RollbackBoundary />
+		<BootstrapperApplicationRef Id="ManagedBootstrapperApplicationHost">
+			<Payload SourceFile="$(var.Player.Installer.TargetDir)\BootstrapperCore.config"/>
+			<Payload SourceFile="$(var.Player.Installer.TargetDir)\Player.Installer.dll"/>
+		</BootstrapperApplicationRef>
 
-      <MsiPackage Id="PlayerInstallationPackageId"
-        Cache="yes" 
-        Visible="no"
-        SourceFile="$(var.Player.Setup.TargetPath)"
-        Vital="yes"> 
-      </MsiPackage>
+		<Chain>
+			<PackageGroupRef Id="NetFx45Redist" />
+
+			<RollbackBoundary />
+
+			<MsiPackage Id="PlayerInstallationPackageId"
+			  Cache="yes"
+			  Visible="no"
+			  SourceFile="$(var.Player.Setup.TargetPath)"
+			  Vital="yes">
+			</MsiPackage>
 		</Chain>
-    
+
 	</Bundle>
 </Wix>

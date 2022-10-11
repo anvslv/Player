@@ -4,7 +4,7 @@
            Name="!(loc.Name)"
            Codepage="1251"
            Language="1049" 
-           Version="0.0.1.0"  
+           Version="0.0.2.0"  
            Manufacturer=" !(loc.Manufacturer)"
            UpgradeCode="4dcc4cf9-cade-45e5-91b1-cbe62d984bfd">
 		
@@ -110,7 +110,7 @@
         </RegistryKey>
         
         <File Id="SharpCompress.Dependency"
-              Name=" SharpCompress.dll"
+              Name="SharpCompress.dll"
               Source="$(var.Player.TargetDir)\SharpCompress.dll"
               DiskId="1" Checksum="yes"/>
       </Component>

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Security; 
-using SharpCompress.Archive;
+using SharpCompress.Archives;
 using SharpCompress.Common;
 
 namespace Player.IO
@@ -41,16 +41,20 @@ namespace Player.IO
             if (supportedExtensions.Contains(i.Extension))
             {
                 this.DirectoryPath = string.Format(@"C:\temp\{0}", Guid.NewGuid());
+
+                if (Directory.Exists(DirectoryPath) == false)
+                {
+                    Directory.CreateDirectory(DirectoryPath);
+                }
+
                 var archive = ArchiveFactory.Open(file);
                 foreach (var entry in archive.Entries)
                 {
                     if (!entry.IsDirectory)
                     {
-                        entry.WriteToDirectory(DirectoryPath,
-                            ExtractOptions.ExtractFullPath |
-                            ExtractOptions.Overwrite);
+                        entry.WriteToDirectory(DirectoryPath, new ExtractionOptions{ ExtractFullPath = true, Overwrite = true} );
 
-                        var thispath = Path.Combine(DirectoryPath, entry.FilePath);
+                        var thispath = Path.Combine(DirectoryPath, entry.Key);
                         this.ScanFile(thispath);
                     }
                 }
