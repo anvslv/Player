@@ -21,7 +21,7 @@
 		</BootstrapperApplicationRef>
 
 		<Chain>
-			<PackageGroupRef Id="NetFx45Redist" />
+			<PackageGroupRef Id="NetFx48Redist" />
 
 			<RollbackBoundary />
 
